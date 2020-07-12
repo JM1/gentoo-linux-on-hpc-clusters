@@ -1,0 +1,15 @@
+--- a/virtual/blas/blas-3.7-r100.ebuild.orig	2019-04-09 07:17:25.443429007 -0000
++++ b/virtual/blas/blas-3.7-r100.ebuild	2019-04-14 09:57:35.944881454 -0000
+@@ -42,12 +42,3 @@
+ "
+ DEPEND=""
+ 
+-pkg_pretend() {
+-	if [[ -e "${EROOT%/}"/usr/$(get_libdir)/lib${PN}.so ]]; then
+-		ewarn "You have still the old ${PN} library symlink present"
+-		ewarn "Please delete"
+-		ewarn "${EROOT%/}/usr/$(get_libdir)/lib${PN}.so"
+-		ewarn "to avoid problems with new ${PN} structure"
+-		die "Old lib${PN} detected"
+-	fi
+-}

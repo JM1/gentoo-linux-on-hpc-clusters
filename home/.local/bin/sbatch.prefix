@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# vim:set syntax=sh fileformat=unix shiftwidth=4 softtabstop=4 expandtab textwidth=120:
+# kate: syntax bash; end-of-line unix; space-indent on; indent-width 4; word-wrap-column 120; word-wrap on;
+# kate: remove-trailing-space on;
+#
+# Copyright (c) 2019-2020 Jakob Meng, <jakobmeng@web.de>
+
+# pull in 'module' shell function in non-interactive bash shell
+. /etc/profile.d/modules.sh
+
+# Set e.g. OMPI_MCA_btl_if_include variable
+# Ref.: /usr/local/modules/modulesfiles/openmpi/gnu
+module load openmpi/gnu
+clean_env sbatch "$@"

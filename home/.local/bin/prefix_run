@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+#
+# vim:set syntax=sh fileformat=unix shiftwidth=4 softtabstop=4 expandtab textwidth=120:
+# kate: syntax bash; end-of-line unix; space-indent on; indent-width 4; word-wrap-column 120; word-wrap on;
+# kate: remove-trailing-space on;
+#
+# Copyright (c) 2019-2020 Jakob Meng, <jakobmeng@web.de>
+
+#set -x
+
+if [ -z "$1" ]; then
+    echo "No command given" > /dev/stderr
+    exit -1
+fi
+
+if [ -z "$GENTOO_PREFIX" ]; then
+    echo "GENTOO_PREFIX is not set" > /dev/stderr
+    exit -1
+fi
+
+EPREFIX="$GENTOO_PREFIX"
+
+if [[ ${SHELL#${EPREFIX}} != ${SHELL} ]] ; then
+        echo "You appear to be in prefix already (SHELL=$SHELL)" > /dev/stderr
+        exit -1
+fi
+
+SHELL=${SHELL##*/}
+export SHELL=${EPREFIX}/bin/${SHELL}
+if [[ ! -x $SHELL ]] ; then
+        echo "Failed to find the Prefix shell, this is probably" > /dev/stderr
+        echo "because you didn't emerge the shell ${SHELL##*/}" > /dev/stderr
+        exit -1
+fi
+
+echo "Entering Gentoo Prefix ${EPREFIX}" > /dev/stderr
+
+ARGS=
+for ARG in "$@"; do
+    ARGS=$"$ARGS \"$ARG\""
+done
+
+clean_env "$SHELL" -l -c "$ARGS"
+RET=$?
+echo "Leaving Gentoo Prefix with exit status $RET" > /dev/stderr
+exit $RET

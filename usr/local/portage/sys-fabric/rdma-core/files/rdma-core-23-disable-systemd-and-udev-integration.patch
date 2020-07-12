@@ -1,0 +1,20 @@
+--- rdma-core-23/CMakeLists.txt.orig	2019-03-18 07:36:43.000000000 -0000
++++ rdma-core-23/CMakeLists.txt	2019-03-28 15:16:50.498217258 -0000
+@@ -437,7 +437,7 @@
+ endif()
+ 
+ # udev
+-find_package(UDev)
++#find_package(UDev)
+ include_directories(${UDEV_INCLUDE_DIRS})
+ 
+ # Statically determine sizeof(long), this is largely unnecessary, no new code
+@@ -452,7 +452,7 @@
+  int main(int argc,const char *argv[]) {return 0;}"
+   HAVE_COHERENT_DMA)
+ 
+-find_package(Systemd)
++#find_package(Systemd)
+ include_directories(${SYSTEMD_INCLUDE_DIRS})
+ RDMA_DoFixup("${SYSTEMD_FOUND}" "systemd/sd-daemon.h")
+ 

@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#
+# vim:set syntax=sh fileformat=unix shiftwidth=4 softtabstop=4 expandtab textwidth=120:
+# kate: syntax bash; end-of-line unix; space-indent on; indent-width 4; word-wrap-column 120; word-wrap on;
+# kate: remove-trailing-space on;
+#
+# Copyright (c) 2019-2020 Jakob Meng, <jakobmeng@web.de>
+
+#set -x
+
+[ -z "$1" ] && exit 255
+
+RETAIN=""
+for VAR in HOME TERM USER SHELL PROFILEREAD SSH_AUTH_SOCK DISPLAY LANG LANGUAGE TAUHOME; do
+    eval VAL=\$$VAR
+    if [ -n "$VAL" ]; then
+        RETAIN+=" \"$VAR=$VAL\""
+    fi
+done
+
+while read REGEX; do
+    VAR="$(echo "$REGEX" | sed -n 's/^\([^=]*\)\=.*$/\1/p')"
+    VAL=$(echo $"$REGEX" | sed -n 's/^[^=]*\=\(.*\)$/\1/p')
+    RETAIN+=" \"$VAR=$VAL\""
+done < <(
+    env | grep '^SLURM[^=]*=.*'
+    env | grep '^OMPI[^=]*=.*'
+    env | grep '^QT[^=]*=.*'
+)
+
+ARGS=
+for ARG in "$@"; do
+    ARGS="$ARGS \"$ARG\""
+done
+
+eval env -i $RETAIN "$SHELL" -l -c \"\$ARGS\"

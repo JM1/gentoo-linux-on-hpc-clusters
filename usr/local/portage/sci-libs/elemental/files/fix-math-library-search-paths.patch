@@ -1,0 +1,36 @@
+diff --git a/cmake/external_projects/ElMath.cmake b/cmake/external_projects/ElMath.cmake
+index a329dd2..9c3188d 100644
+--- a/cmake/external_projects/ElMath.cmake
++++ b/cmake/external_projects/ElMath.cmake
+@@ -13,30 +13,7 @@ include(CheckCXXSourceCompiles)
+ # ========================================================================
+ # NOTE: The variables BLAS_ROOT, LAPACK_ROOT, MATH_ROOT, BLAS_PATH, LAPACK_PATH,
+ #       and MATH_PATH are all optional and to ease the process
+-set(MATH_PATHS /usr/lib
+-               /usr/lib64
+-               /usr/local/lib
+-               /usr/local/lib64
+-               /usr/lib/openmpi/lib
+-               /usr/lib/gcc/x86_64-linux-gnu/4.8
+-               /usr/lib/gcc/x86_64-linux-gnu/4.9
+-               /usr/lib/gcc/x86_64-linux-gnu/5
+-               /usr/lib/gcc/x86_64-linux-gnu/6
+-               /usr/lib/gcc/x86_64-linux-gnu/7
+-               /usr/lib/gcc/x86_64-linux-gnu/8
+-               /lib/x86_64-linux-gnu
+-               /usr/lib/x86_64-linux-gnu
+-               /usr/lib/openblas-base
+-               /usr/lib64/openblas-base
+-               ${BLAS_ROOT}/lib
+-               ${BLAS_ROOT}/lib64
+-               ${LAPACK_ROOT}/lib
+-               ${LAPACK_ROOT}/lib64
+-               ${MATH_ROOT}/lib
+-               ${MATH_ROOT}/lib64
+-               ${BLAS_PATH}
+-               ${LAPACK_PATH}
+-               ${MATH_PATH})
++set(MATH_PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
+ 
+ # Check for BLAS and LAPACK support
+ # =================================

@@ -1,0 +1,14 @@
+--- libflame-9999/build/update-version-file.sh.orig	2018-10-25 19:18:48.000000000 +0200
++++ libflame-9999/build/update-version-file.sh	2019-04-05 11:56:00.687542436 +0200
+@@ -122,9 +122,9 @@
+ 		echo "${script_name}: got back ${git_describe_str}."
+ 
+ 		# Strip off the commit hash label.
+-		new_version_str=$(echo ${git_describe_str} | cut -d- -f-2)
++		new_version_str=$(echo ${git_describe_str} | cut -d- -f-1)
+ 
+-		echo "${script_name}: truncating to ${new_version_str}."
++		ech "${script_name}: truncating to ${new_version_str}."
+ 		echo "${script_name}: updating version file '${version_file}'."
+ 
+ 		# Write the new version string to the version file.

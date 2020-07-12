@@ -1,0 +1,11 @@
+--- a/sci-visualization/paraview/paraview-5.6.2.ebuild	2020-01-05 11:15:38.000000000 -0000
++++ b/sci-visualization/paraview/paraview-5.6.2.ebuild	2020-01-12 14:16:58.489038983 -0000
+@@ -149,7 +149,7 @@
+ 		-DVTK_USE_SYSTEM_EXPAT=ON
+ 		-DVTK_USE_SYSTEM_FREETYPE=ON
+ 		-DVTK_USE_SYSTEM_GL2PS=OFF # doesn't compile, requires modified sources
+-		-DVTK_USE_SYSTEM_GLEW=ON
++		-DVTK_USE_SYSTEM_GLEW=OFF # doesn't work with offscreen
+ 		-DVTK_USE_SYSTEM_HDF5=ON
+ 		-DVTK_USE_SYSTEM_JPEG=ON
+ 		-DVTK_USE_SYSTEM_JSONCPP=ON

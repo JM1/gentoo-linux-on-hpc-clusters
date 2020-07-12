@@ -1,0 +1,120 @@
+diff -Naur a/BLACS/SRC/cgamn2d_.c b/BLACS/SRC/cgamn2d_.c
+--- a/BLACS/SRC/cgamn2d_.c	2012-04-24 18:26:51.000000000 +0200
++++ b/BLACS/SRC/cgamn2d_.c	2019-04-09 11:07:35.859788286 +0200
+@@ -221,7 +221,7 @@
+       {
+ #endif
+       i = 2;
+-      ierr=MPI_Type_struct(i, len, disp, dtypes, &MyType);
++      ierr=MPI_Type_create_struct(i, len, disp, dtypes, &MyType);
+       ierr=MPI_Type_commit(&MyType);
+       bp->N = bp2->N = 1;
+       bp->dtype = bp2->dtype = MyType;
+diff -Naur a/BLACS/SRC/cgamx2d_.c b/BLACS/SRC/cgamx2d_.c
+--- a/BLACS/SRC/cgamx2d_.c	2012-04-24 18:26:51.000000000 +0200
++++ b/BLACS/SRC/cgamx2d_.c	2019-04-09 11:07:35.859788286 +0200
+@@ -221,7 +221,7 @@
+       {
+ #endif
+       i = 2;
+-      ierr=MPI_Type_struct(i, len, disp, dtypes, &MyType);
++      ierr=MPI_Type_create_struct(i, len, disp, dtypes, &MyType);
+       ierr=MPI_Type_commit(&MyType);
+       bp->N = bp2->N = 1;
+       bp->dtype = bp2->dtype = MyType;
+diff -Naur a/BLACS/SRC/dgamn2d_.c b/BLACS/SRC/dgamn2d_.c
+--- a/BLACS/SRC/dgamn2d_.c	2012-04-24 18:26:51.000000000 +0200
++++ b/BLACS/SRC/dgamn2d_.c	2019-04-09 11:07:35.863788275 +0200
+@@ -221,7 +221,7 @@
+       {
+ #endif
+       i = 2;
+-      ierr=MPI_Type_struct(i, len, disp, dtypes, &MyType);
++      ierr=MPI_Type_create_struct(i, len, disp, dtypes, &MyType);
+       ierr=MPI_Type_commit(&MyType);
+       bp->N = bp2->N = 1;
+       bp->dtype = bp2->dtype = MyType;
+diff -Naur a/BLACS/SRC/dgamx2d_.c b/BLACS/SRC/dgamx2d_.c
+--- a/BLACS/SRC/dgamx2d_.c	2012-04-24 18:26:51.000000000 +0200
++++ b/BLACS/SRC/dgamx2d_.c	2019-04-09 11:07:35.863788275 +0200
+@@ -221,7 +221,7 @@
+       {
+ #endif
+       i = 2;
+-      ierr=MPI_Type_struct(i, len, disp, dtypes, &MyType);
++      ierr=MPI_Type_create_struct(i, len, disp, dtypes, &MyType);
+       ierr=MPI_Type_commit(&MyType);
+       bp->N = bp2->N = 1;
+       bp->dtype = bp2->dtype = MyType;
+diff -Naur a/BLACS/SRC/igamn2d_.c b/BLACS/SRC/igamn2d_.c
+--- a/BLACS/SRC/igamn2d_.c	2012-04-24 18:26:51.000000000 +0200
++++ b/BLACS/SRC/igamn2d_.c	2019-04-09 11:07:35.863788275 +0200
+@@ -218,7 +218,7 @@
+       {
+ #endif
+       i = 2;
+-      ierr=MPI_Type_struct(i, len, disp, dtypes, &MyType);
++      ierr=MPI_Type_create_struct(i, len, disp, dtypes, &MyType);
+       ierr=MPI_Type_commit(&MyType);
+       bp->N = bp2->N = 1;
+       bp->dtype = bp2->dtype = MyType;
+diff -Naur a/BLACS/SRC/igamx2d_.c b/BLACS/SRC/igamx2d_.c
+--- a/BLACS/SRC/igamx2d_.c	2012-04-24 18:26:51.000000000 +0200
++++ b/BLACS/SRC/igamx2d_.c	2019-04-09 11:07:35.863788275 +0200
+@@ -218,7 +218,7 @@
+       {
+ #endif
+       i = 2;
+-      ierr=MPI_Type_struct(i, len, disp, dtypes, &MyType);
++      ierr=MPI_Type_create_struct(i, len, disp, dtypes, &MyType);
+       ierr=MPI_Type_commit(&MyType);
+       bp->N = bp2->N = 1;
+       bp->dtype = bp2->dtype = MyType;
+diff -Naur a/BLACS/SRC/sgamn2d_.c b/BLACS/SRC/sgamn2d_.c
+--- a/BLACS/SRC/sgamn2d_.c	2012-04-24 18:26:51.000000000 +0200
++++ b/BLACS/SRC/sgamn2d_.c	2019-04-09 11:07:35.867788263 +0200
+@@ -221,7 +221,7 @@
+       {
+ #endif
+       i = 2;
+-      ierr=MPI_Type_struct(i, len, disp, dtypes, &MyType);
++      ierr=MPI_Type_create_struct(i, len, disp, dtypes, &MyType);
+       ierr=MPI_Type_commit(&MyType);
+       bp->N = bp2->N = 1;
+       bp->dtype = bp2->dtype = MyType;
+diff -Naur a/BLACS/SRC/sgamx2d_.c b/BLACS/SRC/sgamx2d_.c
+--- a/BLACS/SRC/sgamx2d_.c	2012-04-24 18:26:51.000000000 +0200
++++ b/BLACS/SRC/sgamx2d_.c	2019-04-09 11:07:35.867788263 +0200
+@@ -221,7 +221,7 @@
+       {
+ #endif
+       i = 2;
+-      ierr=MPI_Type_struct(i, len, disp, dtypes, &MyType);
++      ierr=MPI_Type_create_struct(i, len, disp, dtypes, &MyType);
+       ierr=MPI_Type_commit(&MyType);
+       bp->N = bp2->N = 1;
+       bp->dtype = bp2->dtype = MyType;
+diff -Naur a/BLACS/SRC/zgamn2d_.c b/BLACS/SRC/zgamn2d_.c
+--- a/BLACS/SRC/zgamn2d_.c	2012-04-24 18:26:51.000000000 +0200
++++ b/BLACS/SRC/zgamn2d_.c	2019-04-09 11:07:35.867788263 +0200
+@@ -221,7 +221,7 @@
+       {
+ #endif
+       i = 2;
+-      ierr=MPI_Type_struct(i, len, disp, dtypes, &MyType);
++      ierr=MPI_Type_create_struct(i, len, disp, dtypes, &MyType);
+       ierr=MPI_Type_commit(&MyType);
+       bp->N = bp2->N = 1;
+       bp->dtype = bp2->dtype = MyType;
+diff -Naur a/BLACS/SRC/zgamx2d_.c b/BLACS/SRC/zgamx2d_.c
+--- a/BLACS/SRC/zgamx2d_.c	2012-04-24 18:26:51.000000000 +0200
++++ b/BLACS/SRC/zgamx2d_.c	2019-04-09 11:07:35.867788263 +0200
+@@ -221,7 +221,7 @@
+       {
+ #endif
+       i = 2;
+-      ierr=MPI_Type_struct(i, len, disp, dtypes, &MyType);
++      ierr=MPI_Type_create_struct(i, len, disp, dtypes, &MyType);
+       ierr=MPI_Type_commit(&MyType);
+       bp->N = bp2->N = 1;
+       bp->dtype = bp2->dtype = MyType;

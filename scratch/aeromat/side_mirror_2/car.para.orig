@@ -1,0 +1,509 @@
+ -----------------------------------------------------
+ BOUNDARY MAPPING
+ -----------------------------------------------------
+
+            Markers: 1
+               Type: reservoir-pressure inflow
+            Subtype: turbulent
+               Name: Inflow
+     Total pressure: 101200.0
+ block end
+ ---------------------------
+
+            Markers: 2
+               Type: exit-pressure outflow 
+      Exit pressure: 100000
+               Name: Outflow
+ block end
+ ---------------------------
+
+            Markers: 3
+               Type: symmetry plane
+               Name: SymLinks
+                           Cutting plane allowed (0/1): 0
+                              Write surface data (0/1): 1
+ block end
+ ---------------------------
+
+            Markers: 4
+               Type: symmetry plane
+               Name: Sky
+                           Cutting plane allowed (0/1): 0
+                              Write surface data (0/1): 1
+ block end
+ ---------------------------
+
+            Markers: 5
+               Type: symmetry plane
+               Name: Ground
+                           Cutting plane allowed (0/1): 0
+                              Write surface data (0/1): 1
+ block end
+ ---------------------------
+
+            Markers: 6
+               Type: viscous wall
+            Subtype: turbulent
+               Name: Mirror
+                           Cutting plane allowed (0/1): 0
+                              Write surface data (0/1): 1
+ block end
+ ---------------------------
+
+            Markers: 7
+               Type: symmetry plane
+               Name: SideRechts
+                           Cutting plane allowed (0/1): 0
+                              Write surface data (0/1): 1
+ block end
+ ---------------------------
+
+            Markers: 8
+               Type: viscous wall
+            Subtype: turbulent
+               Name: Karosserie
+                           Cutting plane allowed (0/1): 0
+                              Write surface data (0/1): 1
+ block end
+ ---------------------------
+
+            Markers: 9
+               Type: viscous wall
+            Subtype: turbulent
+               Name: Glas
+                           Cutting plane allowed (0/1): 0
+                              Write surface data (0/1): 1
+ block end
+ ---------------------------
+
+
+
+
+ ----------------------------------------------------- 
+ ADAPTATION
+ -----------------------------------------------------
+
+                 Change wall normal distribution (0/1): 1
+                                       Refinement mode: both
+                                          Output level: 10
+                    2D offset vector (0 / x=1,y=2,z=3): 0
+    Reference values ---------------------------------: -
+                                             Wanted y+: 1.0
+     Refinement Parameter ----------------------------: -
+                                  Maximum point number: -1
+                              Percentage of new points: 0
+                                Adaptation sensitivity: 0.9
+                                   Minimum edge length: 1e-12
+     Global Indicator settings -----------------------: -
+                                        Indicator type: diff
+                                       h-scaling power: 0.5
+                            h-scaling reference length: 1
+                                  Surface-weights file: (none)
+      Indicator settings for user defined values -----: -
+                                 Indicator user-values: mach_p
+                                Indicator user-scaling: 1.0 1.0 1.0
+       Equidistribution Indicator  -------------------: -
+                                  Indicator0 V-scaling: 1
+                                Indicator0 rho-scaling: 0.2
+                                 Indicator0 Ht-scaling: 0.2
+                                 Indicator0 Pt-scaling: 1
+     Boundary layer adaptation -----------------------: -
+                    Edge relation to unstructured part: 0.0
+                                 Smoothing steps first: 20
+                               Smoothing epsilon first: 0.2
+                                  Smoothing steps last: 10
+                                Smoothing epsilon last: 0.2
+    Refinement regime -------------------------------: -
+                            Number of cut-out volumes: -1
+                                   Minima x-direction: 12.0
+                                   Maxima x-direction: 20.0
+                                   Minima y-direction: -2.0
+                                   Maxima y-direction: 2.0
+                                   Minima z-direction: -1.0
+                                   Maxima z-direction: 1.0
+    Surface Reconstruction Parameter ----------------: -
+                       Maximum surface angle (degree): 30
+                        Maximal point movement factor: 0.2
+
+ ----------------------------------------------------- 
+ Required Parameters
+ ----------------------------------------------------- 
+                            Boundary mapping filename: (thisfile)
+                                Primary grid filename: car.grid
+
+#                                        Reynolds number: 1000000
+                                         Prandtl number: 0.72
+                                    Sutherland constant: 110.4
+                         Sutherland reference viscosity: 1.716e-05
+                       Sutherland reference temperature: 273
+      References --------------------------------------: -
+                                      Reference density: 1.14518707118212
+                                  Reference temperature: 298.15
+                                     Reference pressure: 101325
+                                        Reynolds length: 2
+                                  Reference Mach number: 0.15
+                                     Reference velocity: 52.7928812530629
+                               Reference outer pressure: 101325
+    Geometry ----------------------------------------: -
+                                           Grid scale: 1.0
+ ----------------------------------------------------- 
+ IO
+ ----------------------------------------------------- 
+                                          Grid prefix: car
+                                  Output files prefix: car
+    Solver ------------------------------------------: -
+                     Automatic parameter update (0/1): 1
+                  Write pointdata dimensionless (0/1): 0
+
+ ----------------------------------------------------- 
+ PREPROCESSING
+ ----------------------------------------------------- 
+
+    Files/IO ----------------------------------------: -
+                                       Old grid prefix: (none)
+                              Parent input file prefix: (none)
+                             Parent output file prefix: (none)
+                         Output MG agglomeration (0/1): 0
+                Type of discretisation (node=0/cell=1): 0
+                                                      : -
+                            Read partitioning filename: (none)
+                                  Write graph filename: (none)
+     Parameter ---------------------------------------: -
+                            Number of multigrid levels: 3
+                                          Output level: 5
+					   Grid metric: Cell_Vertex
+     Runtime optimisation ----------------------------: -
+                 Cache-coloring (0/max_faces in color): 100000
+                          Bandwidth optimisation (0/1): 1
+                    2D offset vector (0 / x=1,y=2,z=3): 0
+                           Compute lusgs mapping (0/1): 1
+     Agglomeration -----------------------------------: -
+                                   Point fusing reward: 1.2
+                            Structured grid coarsening: 0
+     Extras ------------------------------------------: -
+                            Sharp edge angle (degrees): 0
+                      Control volume edge weight (0/1): 0
+                 Change boundary control volumes (0/1): 0
+                                Compute DES scale(0/1): 0
+                          Compute exact whirlflux(0/1): 0
+                            Compute exact surface(0/1): 0
+                                     Axisymmetry (0/1): 0
+                           Axisymmetry axial direction: 1 0 0
+                          Axisymmetry radial direction: 0 0 1
+     Partitioning ------------------------------------: -
+                        Number of primary grid domains: 600
+                                     Number of domains: 600
+                               Smooth partitions (0/1): 0
+                           Type of partitioning (name): private
+                                                      : -
+                       Metis parameter CoarsenTo (int): 100
+                           Metis parameter Mtype (int): 21
+                           Metis parameter Rtype (int): 13
+                          Metis parameter IPtype (int): 4
+                                                      : -
+     Theta not for Tau -------------------------------: -
+         Preprocessing for incompressible solver (0/1): 0
+     Correct metric for boundary control volumes (0/1): 0
+    Project boundary control volumes coordinates (0/1): 0
+        Translation factor for shifted boundary points: 1
+                            Compute parent faces (0/1): 0
+
+----------------------------------------------------- 
+ Solver parameters:
+----------------------------------------------------- 
+ 
+    Files/IO ------------------------------------------: -
+                       Automatic parameter update (0/1): 1
+                            Accumulate queue time (0/1): 1
+      Timestepping Start/Stop -------------------------: -
+                                          Output period: 10
+                               Maximal time step number: 10000
+                                       Minimum residual: 1e-11
+                              Matching iteration period: 150
+      Monitoring --------------------------------------: -
+                                  Monitor history (0/1): 1
+                         Residual monitoring type (0/1): 0
+                                      Monitoring values: Residual_C-lift_C-drag
+                         Monitoring significant figures: 8_8_8
+      Memory management -------------------------------: -
+                                  Increase memory (0/1): 0
+      Perfect gas thermodynamic -----------------------: -
+                                         Gas constant R: 296.76
+      Transport coefficients --------------------------: -
+                                    Sutherland constant: 103
+                         Sutherland reference viscosity: 1.665e-05
+                       Sutherland reference temperature: 273.15
+     Geometry ----------------------------------------: -
+                                             Grid scale: 1.0
+      Variables ---------------------------------------: -
+                              Fix negative values (0/1): 0
+                                        Minimal density: 1e-12
+                                       Minimal pressure: 1e-12
+                                         Minimal energy: 1e-12
+     Agglomeration -----------------------------------: -
+                                           Agglomeration version: 1
+                                      Structured grid coarsening: 0.5
+      Flux main ---------------------------------------: -
+                      Inviscid flux discretization type: Upwind
+#Central
+                       Viscous flux type TSL/Full (0/1): 1
+                       Hold static velocity field (0/1): 0
+         Set mixed upwind/central inviscid fluxes (0/1): 0
+                          Compute exact whirlflux (0/1): 0
+      Central flux ------------------------------------: -
+                             Central dissipation scheme: Matrix_dissipation
+                       Central convective meanflow flux: Average_of_flux
+                     Central convective turbulence flux: Average_of_flux
+                                 Assymetric formulation: 0
+                      2nd order dissipation coefficient: 0.5
+              Inverse 4th order dissipation coefficient: 64
+	         Version of cell stretching coefficient: HyperFlex
+      Minimum artificial dissipation for acoustic waves: 0.2 # Das kann zu wenig sein
+            Minimum artificial dissipation for velocity: 0.2 # Das kann zu wenig sein
+                            Reconstruction of gradients: Green_Gauss
+       Upwind flux ------------------------------------: -
+                                            Upwind flux: AUSMDV
+                             Order of upwind flux (1-2): 1.8
+#                            Order of upwind flux (1-2): 1
+                    Order of additional equations (1-2): 1
+                          Mach number limit for limiter: 0
+                          Lowest pressure for 2nd order: 0
+                          Use line reconstruction (0/1): 0
+        Flowfield initialization ------------------------: -
+                            Init total conditions (0/1): 0
+      Limiter -----------------------------------------: -
+                           Limiter freezing convergence: 0
+                       Venkatakrishnan limiter constant: -1
+                               SRR limiter active (0/1): 1
+                 SRR limiter radius relaxation constant: 0.03
+                             SRR limiter disangle multi: 1
+                             SRR limiter disangle shift: 0
+                                Coarse grid upwind flux: Van_Leer
+       Relaxation --------------------------------------: -
+                                      Relaxation solver: Backward_Euler
+      Runge Kutta -------------------------------------: -
+                           Number of Runge-Kutta stages: 3
+                               Runge-Kutta coefficients: 0.666666666666667 0.666666666666666 1 0 0 0
+                   Runge-Kutta dissipation coefficients: 1 0 0 0 0 0
+      Full multigrid ----------------------------------: -
+                                  Multigrid start level: 1
+                Maximal time step number (coarse grids): 10000000
+                        Minimum residual (coarse grids): 0.0001
+        Full multigrid central scheme first-order (0/1): 1
+                        Minimum residual (coarse grids): 0.0001
+        Full multigrid central scheme first-order (0/1): 1
+	
+	
+      Multigrid ---------------------------------------: -
+                                MG description filename: v
+     			      Number of MG-cycle levels: 3
+      	Number of relaxation steps between MG-transfers: 8 # Anpassen
+      Number of relaxation steps on coarsest grid level: 8 # Anpassen ggf. mehr
+                          SG start up steps (fine grid): 200
+                      Turbulence equations use multigrid (0/1): 0
+    Use source terms in coarse grid turbulence equations (0/1): 1
+             Use face gradient correction on coarse grid (0/1): 1
+                Set boundary fluxes for forcing function (0/1): 1
+            Skip dissipation update for forcing function (0/1): 0
+      Use face gradient correction on coarse grid (0/1): 1
+      	 Set boundary fluxes for forcing function (0/1): 1
+      	       Turbulence equations use multigrid (0/1): 1
+      Use source terms in coarse grid turbulence equations (0/1): 1
+	
+      Timestepsize ------------------------------------: -
+                                             CFL number: 1
+                              CFL number (coarse grids): 1
+                              CFL number (large grad p): 1
+                             Time step smoothing factor: 0.4
+      Smoother ----------------------------------------: -
+                                      Residual smoother: Point_explicit
+                                    Correction smoother: Point_explicit
+                              Correction smooth epsilon: 0.2
+                                Residual smooth epsilon: 0.2002
+                             Correction smoothing steps: 2
+                               Residual smoothing steps: 2
+      Point Implicit Smoother -------------------------: -
+                                     Initial CFL number: 10
+                                       Final CFL number: 1000
+                 Start up steps with initial CFL number: 10
+                         Increase factor for CFL number: 1.01
+            Relaxation coefficient for implicit systems: 1
+               Threshold parameter for convective waves: 1
+                          Use Hartens entropy fix (0/1): 0
+                               Monitor CFL number (0/1): 0
+      Preconditioning ---------------------------------: -
+                   #                     Preconditioning: PrimNew
+                   #                       Cut-off value: 3
+      Turbulence --------------------------------------: -
+  #                                      Turbulence model version: SA 
+  #                                              SA model version: SA-neg
+  #                             SA attractor for zero value (0/1): 1
+  #                                     General ratio mue-t/mue-l: 3
+				       
+  #     Turbulence model equations eigenvalue correction: 0.15
+  # (for example 0.0 for 2-eq. turbulence models and RSM models, and 0.15 for 1-eq. turbulence models)
+ 
+
+     Turbulence --------------------------------------: -
+                              Turbulence model version: RSM
+      RSM ---------------------------------------------: -
+                              Rsm re-distribution model: SSG/LRR-lnw.2010
+                             Rsm implementation version: FLOWer
+                                  Rsm dissipation model: isotropic
+                                    Rsm diffusion model: GGDH.2010
+                              Rsm length scale equation: Menter_BSL_lnw
+                      Rsm normal stress limiting factor: 0
+
+
+                                 Ratio Prandtl lam/turb: 0.8
+                              General ratio mue-t/mue-l: 0.1
+                              Maximum limit mue-t/mue-l: 20000
+                            General turbulent intensity: 0.001
+                                 Reference bl-thickness: 1e+22
+               Turbulence equations use multigrid (0/1): 0
+              Maximum turbulence production/destruction: 20
+                          Omega boundary condition type: smooth_standard
+                      Boussinesq mod. for K-Omega (0/1): 0
+                                    K-omega wall factor: 10
+                       Kato Launder modification factor: 0
+                                K-omega limitation type: standard
+                                              Minimum k: 1e-05
+                                          Minimum omega: 1e-05
+              Omega limitation in laminar regions (0/1): 0
+                                      Positivity scheme: 0
+                                  EARSM expansion order: 0
+                         Vortical flow correction (0/1): 0
+                                   SAS correction (0/1): 0
+          Turbulence diffusion flux type TSL/Full (0/1): 1
+                            Smagorinsky viscosity (0/1): 0
+                                Smagorinsky coefficient: 0.17
+                                   Spatial filter width: 1
+                             LES/DES filter width model: (none)
+                    Write pointdata dimensionless (0/1): 0		    
+RSM ---------------------------------------------: -
+                               Rsm re-distribution model: SSG/LRR-w
+                                   Rsm dissipation model: isotropic
+                                     Rsm diffusion model: GGDH
+                               Rsm length scale equation: Menter_BSL_omega
+                               Rsm omega limiting factor: 1e-05
+                 ---------------------------------------:
+     Reference system of forces and moments (tau/ln9300): ln9300
+
+
+
+#########################################################################
+#
+#
+#   Chimera Suchalgorithmus Unterstuetzung
+#
+#
+##################################################################################
+
+       Bounding Box ------------------------------------: -
+                        Bounding x coordinate range (3D): (none)
+                        Bounding y coordinate range (3D): (none)
+                        Bounding z coordinate range (3D): (none)
+       Volume element options --------------------------: -
+                                Volume data output (0/1): 1
+                                  Element types for zone: (none)
+                        One zone for all volume elements: 0
+                                Specify tetrahedral list: (none)
+                                    Specify pyramid list: (none)
+                                      Specify prism list: (none)
+                                   Specify hexaeder list: (none)
+                      Percentage of BL reduction (0-100): 0
+      Surface element options --------------------------: -
+                               Surface data output (0/1): 1
+                 Create surface zone for boundary marker: (none)
+                                     Create one boundary: 0
+                 Create surface zone for surface element: (none)
+             Create surface zone for triangular elements: (none)
+          Create surface zone for quadrilateral elements: (none)
+       Output Control ----------------------------------: -
+                                   #       Output format: ensight_gold
+                                             Ascii (0/1): 0
+                                               Precision: 9
+                                    Title of output file: (none)
+# Chimera component output (Tecplot, Ensight Gold) (0/1): 0
+       Other -------------------------------------------: -
+                                           Variable list: (none)
+                                                 Swap yz: 0
+                      Separate original and adapted file: 0
+                           Use vectors and tensors (0/1): 1
+                                           Old grid size: 0
+                                             Use node ID: 0
+                                            Output level: 5
+                              Amif aero coordinate frame: 1
+       BDF format options ------------------------------: -
+                                 BDF field format (8/16): 8
+                                 BDF coordinate frame CP: (none)
+                 BDF basic coordinate frame for frame CP: (none)
+                 BDF points defining coordinate frame CP: 0 0 0 0 0 1 1 0 1
+                                 BDF coordinate frame CD: (none)
+                 BDF basic coordinate frame for frame CD: (none)
+                 BDF points defining coordinate frame CD: 0 0 0 0 0 1 1 0 1
+                                 BDF scale data entry ID: (none)
+                             BDF scale reference lengths: 1 1 1 
+##################################################################################
+    Chimera search ----------------------------------: -
+              Suppress error on orphaned points (0/1): 1
+    Chimera wall projection -------------------------: -
+                  Apply Chimera wall projection (0/1): 0
+		  
+#########################################################################
+#
+#
+#   Dual time Stepping
+#
+#
+#########################################################################
+      Dual time ---------------------------------------: -
+
+                                                   Unsteady time stepping: dual
+                           Unsteady activate inner iteration output (0/1): 1
+                                    Unsteady show pseudo time steps (0/1): 1
+                                         Unsteady physical time step size: 0.005
+                                            Unsteady physical time offset: 0
+                                    Unsteady computational time step size: -1
+                                       Unsteady normalized time step size: -1
+                                             Unsteady physical time steps: 10000
+                                  Unsteady inner iterations per time step: 50
+                         Minimum number of inner iterations per time step: 0
+                                           Unsteady implicit scheme order: 2
+                                             Unsteady extrapolation order: 0
+                                       Compute harmonics on surface (0/1): 0
+                                                 Physical simulation time: -1
+                                                         Runge-Kutta type: SDIRK
+                                               Time step adaptation (0/1): 1
+                                           Time step adaptation tolerance: 5e-05
+                                          Time step adaptation controller: proportional-integral
+                                         Use time step size limiter (0/1): 1
+
+----------------------------------------------------------------
+#       Flow time averaging ------------------------------: -
+#                                   Compute flow statistics: mean+meanvelgrad
+#                               Reinitialize flow averaging: 1 1 1
+----------------------------------------------------------------
+
+
+ ----------------------------------------------------- 
+ Cut plane output
+ ----------------------------------------------------- 
+#                         Plane output description file: (thisfile)
+#                                   Plane output values: xyz_cp_cf_yplus
+#                                  Plane output period: 2000
+#                                      Number of planes: 2
+#                               ###    Boundary type(s): viscous wall
+#                                       Plane support x: 0. 0.
+#                                       Plane support y: 0. 0.2
+#                                       Plane support z: 0. 0.
+#                                        Plane normal x: 0. 0.
+#                                        Plane normal y: 1. 1.
+#                                        Plane normal z: 0. 0.
+
+ -----------------------------------------------------
+ Extra field pointdata output
+ -----------------------------------------------------
+   Field output description file: (thisfile)
+   Field output values: cp_Ptot_mach
+

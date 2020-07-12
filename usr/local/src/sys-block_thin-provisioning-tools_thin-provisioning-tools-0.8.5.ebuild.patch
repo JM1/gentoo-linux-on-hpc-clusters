@@ -1,0 +1,10 @@
+--- a/sys-block/thin-provisioning-tools/thin-provisioning-tools-0.8.5.ebuild	2020-01-10 10:31:34.000000000 +0100
++++ b/sys-block/thin-provisioning-tools/thin-provisioning-tools-0.8.5.ebuild	2020-01-10 10:32:32.981551704 +0100
+@@ -69,6 +69,6 @@
+ }
+ 
+ src_install() {
+-	emake DESTDIR="${D}" DATADIR="${D}/usr/share" install
++	emake DESTDIR="${D}" PREFIX="${EPREFIX%/}"/usr DATADIR="${EPREFIX%/}/usr/share" install
+ 	dodoc README.md TODO.org
+ }

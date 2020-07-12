@@ -1,0 +1,10 @@
+--- a/sci-visualization/paraview/paraview-5.6.0-r1.ebuild	2019-04-26 15:09:47.000000000 -0000
++++ b/sci-visualization/paraview/paraview-5.6.0-r1.ebuild	2019-05-18 11:50:54.140197826 -0000
+@@ -86,6 +86,7 @@
+ 		dev-qt/qttest:5
+ 		dev-qt/qtwebkit:5
+ 		dev-qt/qtx11extras:5
++		dev-qt/qtxmlpatterns:5
+ 	)
+ 	sqlite? ( dev-db/sqlite:3 )
+ 	tcl? ( dev-lang/tcl:0= )

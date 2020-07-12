@@ -1,0 +1,40 @@
+diff --git a/dev-qt/qtcore/metadata.xml b/dev-qt/qtcore/metadata.xml
+index c612265c6f79..dc62c4f98fed 100644
+--- a/dev-qt/qtcore/metadata.xml
++++ b/dev-qt/qtcore/metadata.xml
+@@ -7,6 +7,7 @@
+ 	</maintainer>
+ 	<use>
+ 		<flag name="systemd">Enable native journald logging support</flag>
++		<flag name="ancient-kernel-support">Support kernels back to 2.6.28 (minimum is 3.17 otherwise)</flag>
+ 	</use>
+ 	<upstream>
+ 		<bugs-to>https://bugreports.qt.io/</bugs-to>
+diff --git a/dev-qt/qtcore/qtcore-5.12.3.ebuild b/dev-qt/qtcore/qtcore-5.12.3.ebuild
+index c8a30f8a58a5..797af72267be 100644
+--- a/dev-qt/qtcore/qtcore-5.12.3.ebuild
++++ b/dev-qt/qtcore/qtcore-5.12.3.ebuild
+@@ -11,7 +11,7 @@ if [[ ${QT5_BUILD_TYPE} == release ]]; then
+ 	KEYWORDS="amd64 ~arm ~arm64 ~hppa ~ppc ppc64 ~sparc x86 ~amd64-fbsd"
+ fi
+ 
+-IUSE="icu systemd"
++IUSE="ancient-kernel-support icu systemd"
+ 
+ DEPEND="
+ 	dev-libs/double-conversion:=
+@@ -57,6 +57,14 @@ src_configure() {
+ 		$(qt_use !icu iconv)
+ 		$(qt_use systemd journald)
+ 	)
++
++	if use ancient-kernel-support ; then
++		myconf+=(
++			-no-feature-getentropy  # needs 3.17
++			-no-feature-renameat2   # needs 3.16
++		)
++	fi
++
+ 	qt5-build_src_configure
+ }
+ 

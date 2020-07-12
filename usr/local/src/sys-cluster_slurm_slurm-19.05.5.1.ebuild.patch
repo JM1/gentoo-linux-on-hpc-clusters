@@ -1,0 +1,11 @@
+--- a/sys-cluster/slurm/slurm-19.05.5.1.ebuild	2019-12-21 11:39:40.000000000 -0000
++++ b/sys-cluster/slurm/slurm-19.05.5.1.ebuild	2020-01-10 13:35:05.035056731 -0000
+@@ -215,7 +215,7 @@
+ 
+ pkg_preinst() {
+ 	if use munge; then
+-		sed -i 's,\(SLURM_USE_MUNGE=\).*,\11,' "${D}"/etc/conf.d/slurm || die
++		sed -i 's,\(SLURM_USE_MUNGE=\).*,\11,' "${ED}"/etc/conf.d/slurm || die
+ 	fi
+ }
+ 

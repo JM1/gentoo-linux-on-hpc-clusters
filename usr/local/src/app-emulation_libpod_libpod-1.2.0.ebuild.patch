@@ -1,0 +1,11 @@
+--- a/app-emulation/libpod/libpod-1.2.0.ebuild.orig	2019-04-11 23:09:31.000000000 -0000
++++ b/app-emulation/libpod/libpod-1.2.0.ebuild	2019-05-16 18:40:01.716999387 -0000
+@@ -93,7 +93,7 @@
+ }
+ 
+ src_install() {
+-	emake DESTDIR="${D}" PREFIX="${D}${EPREFIX}/usr" install
++	emake DESTDIR="${D}" PREFIX="${D}${EPREFIX}/usr" ETCDIR="${D}${EPREFIX}/etc" install
+ 
+ 	insinto /etc/containers
+ 	newins test/registries.conf registries.conf.example

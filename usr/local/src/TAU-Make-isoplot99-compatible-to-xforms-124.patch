@@ -1,0 +1,28 @@
+From e3781e038df8606259c3a83fe81866a3881a86d3 Mon Sep 17 00:00:00 2001
+From: Jakob Meng <jakobmeng@web.de>
+Date: Tue, 21 May 2019 21:10:33 +0200
+Subject: [PATCH] Make isoplot99 compatible to xforms 1.2.4
+
+Function `fl_drw_box` has been renamed to `fl_draw_box` in xforms 1.2.4,
+without providing a backwards-compatible function definition. So this
+fix will NOT compile with xforms 1.2.3 or lower.
+---
+ src/addons/isoplot99/canvas.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/addons/isoplot99/canvas.c b/src/addons/isoplot99/canvas.c
+index ca2405b..aceb1c4 100644
+--- a/src/addons/isoplot99/canvas.c
++++ b/src/addons/isoplot99/canvas.c
+@@ -301,7 +301,7 @@ int freeobj_canvas_handle(FL_OBJECT *ob, int ev, FL_Coord mx, FL_Coord my,
+       int      i, d = 0, p, ed;
+       FL_COLOR col;
+ 
+-      fl_drw_box(form_isoplot->canvas->boxtype,
++      fl_draw_box(form_isoplot->canvas->boxtype,
+                  (FL_Coord)globals.view.cx,
+                  (FL_Coord)globals.view.cy,
+                  (FL_Coord)globals.view.cw,
+-- 
+2.11.0
+

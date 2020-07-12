@@ -1,0 +1,228 @@
+ -----------------------------------------------------
+ BOUNDARY MAPPING
+ -----------------------------------------------------
+
+            Use Theta (0/1): 1
+
+ ---------------------------
+
+                       Type: inflow
+                       Name: Inflow
+                    Markers: 1
+                   Velocity: 1.0 0.0 0.0
+                Temperature: 283.15
+ block end
+ ---------------------------
+
+                       Type: outflow
+                       Name: Outflow
+                    Markers: 2
+   Radial pressure equilibrium (0/1): 0
+          Extrapolate pressure (0/1): 1
+             Extrapolation direction: 1 0 0
+ block end
+ --------------------------- 
+
+
+                       Type: symmetry plane
+                       Name: SymTop
+                    Markers: 3
+ block end
+ ---------------------------
+
+                       Type: symmetry plane
+                       Name: SymBottom
+                    Markers: 4
+ block end
+ ---------------------------
+
+                       Type: symmetry plane
+                       Name: SymLeft
+                    Markers: 5
+ block end
+ ---------------------------
+    
+                       Type: symmetry plane
+                       Name: SymRight
+                    Markers: 6
+ block end
+ ---------------------------         
+
+                       Type: wall
+                    Subtype: laminar
+                       Name: Cylinder
+               Thermal type: isotherm
+                Temperature: 303.15 
+                    Markers: 7
+ block end
+ ---------------------------
+
+
+
+----------------------------------------------------------------------------
+Preprocessing 
+----------------------------------------------------------------------------
+                                             Number of domains: 1
+      Files/IO ----------------------------------------: -
+                             Boundary mapping filename: karman.para
+                                 Primary grid filename: karman.grid
+                                           Grid prefix: karman 
+                                   Output files prefix: karman 
+                                       Old grid prefix: (none)
+                              Parent input file prefix: (none)
+                             Parent output file prefix: (none)
+                         Output MG agglomeration (0/1): 0
+                                                      : -
+                            Read partitioning filename: (none)
+                                  Write graph filename: (none)
+     Parameter ---------------------------------------: -
+                            Number of multigrid levels: 3
+                                          Output level: 10
+                                           Grid metric: Cell_Vertex
+     Runtime optimisation ----------------------------: -
+                 Cache-coloring (0/max_faces in color): 100000
+                          Bandwidth optimisation (0/1): 1
+                    2D offset vector (0 / x=1,y=2,z=3): 0
+                           Compute lusgs mapping (0/1): 0
+     Agglomeration -----------------------------------: -
+                                 Type of agglomeration: private
+                                                      : -
+                                 Agglomeration version: 0
+                                   Point fusing reward: 1.2
+                            Structured grid coarsening: 0.9
+                           Surface agglomeration ratio: 0
+                        Wallnormal agglomeration ratio: 0
+                                                      : -
+                       Type of coarsening for MGridGen: 4
+                       Type of refinement for MGridGen: 6
+             Minsize for the coarse graph for MGridGen: 1
+             Maxsize for the coarse graph for MGridGen: 4
+     Extras ------------------------------------------: -
+                            Sharp edge angle (degrees): 0
+                      Control volume edge weight (0/1): 1
+                               Consider wall roughness: global
+                                 Global wall roughness: 0
+                                    Roughness filename: (none)
+                         Compute exact whirlflux (0/1): 0
+                                     Axisymmetry (0/1): 0
+                           Axisymmetry axial direction: 1 0 0 
+                          Axisymmetry radial direction: 0 0 1 
+                           Project wall distance (0/1): 0
+                                     Line search (0/1): 0
+                         Write lines into a file (0/1): 0
+                  Threshold parameter for aspect ratio: 4
+     Partitioning ------------------------------------: -
+                        Number of primary grid domains: 4
+                                     Number of domains: 4
+                               Smooth partitions (0/1): 0
+                           Type of partitioning (name): private
+                                                      : -
+                       Metis parameter CoarsenTo (int): 100
+                           Metis parameter Mtype (int): 21
+                           Metis parameter Rtype (int): 13
+                          Metis parameter IPtype (int): 4
+                                                      : -
+     Theta not for Tau -------------------------------: -
+         Preprocessing for incompressible solver (0/1): 1
+                      Output shifted points grid (0/1): 0
+     Correct metric for boundary control volumes (0/1): 1
+    Project boundary control volumes coordinates (0/1): 1
+        Translation factor for shifted boundary points: 1
+                            Compute parent faces (0/1): 0
+     Logfile control ---------------------------------: -
+            Enable logfile output on all domains (0/1): 1
+-----------------------------------------------------
+
+
+
+  ----------------------------------------------------------------------------
+  Solver
+
+  ----------------------------------------------------------------------------
+    Timestepping Start/Stop ----------------------------------: -
+                                      Maximal time step number: 2000
+                                                  Maximal time: 10000
+                                      Current time step number: 0
+                                                  Current time: 0
+                                                 Output period: 50
+                                            Output time period: 10000
+
+                              Automatic parameter update (0/1): 1
+                                    Output initial field (0/1): 0
+
+    Timestep Settings ----------------------------------------: -
+                              CFL number or negative time step: -0.0005
+                      Time-discretization fully implicit (0/1): 0
+    Computational quantities ---------------------------------: -
+        Discretization scheme for momentum (UDS/CDS/LUDS/QUDS): QUDS
+                       Use gradient limiter for momentum (0/1): 1
+           NVD blending factor for momentum equations (0.-0.5): 0.4
+                  4th order dissipation scaling factor (0.-1.): 0
+          Time discretization scheme (Steady/EU_E/EU_I/TPB/CN): TPB
+                                   Use LDU decomposition (0/1): 0
+                                       Degree of stabilization: 1
+         Velocity pressure coupling method (Projection/SIMPLE): Projection
+                         Pressure multigrid type (STD/PFM/AMG): STD
+    Projection -----------------------------------------------: -
+                                   Projection weighting factor: 1
+    Pressure equation solver ---------------------------------: -
+                          Type of solver for pressure equation: BCGS
+                      GMRES restart length for pressure solver: 20
+              Maximal number of iterations for pressure solver: 20
+              Minimum number of iterations for pressure solver: 2
+                                   Epsilon for pressure solver: 0.0001
+                  Stopping criterion for pressure solver (0/1): 0
+                            Preconditioning of pressure solver: Jacobi
+                   MG description filename for pressure solver: v3
+         Use linear interpolation for MG pressure solver (0/1): 1
+              Under-relaxation factor for MG pressure smoother: 0.8
+              Averaging parameter value for MG pressure solver: 1.2
+     Max. number of iterations for coarse grid pressure solver: -1
+     Min. number of iterations for coarse grid pressure solver: -1
+                       Epsilon for coarse grid pressure solver: -1
+              Type of solver for coarse grid pressure equation: BCGS
+    Momentum equation solver ---------------------------------: -
+                          Type of solver for momentum equation: BCGS
+                      GMRES restart length for momentum solver: 20
+              Maximal number of iterations for momentum solver: 30
+              Minimum number of iterations for momentum solver: 4
+                                   Epsilon for momentum solver: 0.0001
+                  Stopping criterion for momentum solver (0/1): 0
+                            Preconditioning of momentum solver: Jacobi
+                   MG description filename for momentum solver: sg
+    Reference quantitites ------------------------------------: -
+                                             Reference density: 1.21
+                                          Reference velocities: 1 0 0 
+                                            Reference pressure: 100000
+                                           Reference viscosity: 0.000182
+                 Sutherland reference temperature and constant: 0 0 
+                                   Reference point coordinates: 0 0 0 
+                                         Drag direction vector: 1 0 0 
+                                         Lift direction vector: 0 1 0 
+    Optional output parameters -------------------------------: -
+                                  List of monitoring variables: (none)
+                           Coordinates for monitoring point(s): (none)
+             Write header in monitor/residual files (Gen/Xmgr): (none)
+                                           Field output values: (none)
+                                         Surface output values: (none)
+                Write starting/final residuals to file (0/1/2): 0
+                       Add residuals of scalar equations (0/1): 0
+                          Calculate adaptation indicator (0/1): 0
+                      Starting time for statistics computation: -1
+                                   List of averaged quantities: (none)
+                                List of fluctuation quantities: (none)
+    Extra parameters -----------------------------------------: -
+                              Use least square gradients (0/1): 0
+                        Detect symmetry axis by boundary names: (none)
+                      Compute initial potential solution (0/1): 1
+    Activated models -----------------------------------------: -
+                                        Names of models to use: (none)
+    Moving grid ----------------------------------------------: -
+                                         Type of grid movement: static
+                                   Motion description filename: (none)
+                                     Motion hierarchy filename: (none)
+
+
+ -----------------------------------------------------
+ Updates
+ -----------------------------------------------------

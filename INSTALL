@@ -1,0 +1,671 @@
+#!/bin/sh
+# shebang is here only to enable syntax highlighting in Kate
+exit
+
+# vim:set syntax=sh fileformat=unix shiftwidth=4 softtabstop=4 expandtab textwidth=120:
+# kate: syntax bash; end-of-line unix; space-indent on; indent-width 4; word-wrap-column 120; word-wrap on;
+# kate: remove-trailing-space on;
+#
+# Copyright (c) 2019-2020 Jakob Meng, <jakobmeng@web.de>
+#
+# How To Setup Gentoo Prefix at HPC Cluster wr0.wr.inf.h-brs.de
+#
+# The following guide goes through all commands which are required to setup Gentoo Linux in an arbitrary, user-writeable
+# directory on a HPC cluster. It helps with benchmarking the network performance to discover configuration mismatches
+# due to differences between the MPI instances provided by the host OS and Gentoo Linux. Finally it shows how to
+# integrate custom code into Gentoo Linux and execute it using the job scheduler (slurmd) provided by the host OS.
+#
+# For an introduction have a look at https://github.com/JM1/gentoo-linux-on-hpc-clusters/blob/master/README.md first!
+#
+# NOTE: This guide is work-in-progress! It resembles more of a personal sketchpad than a complete guide, it is still
+#       missing important steps as I did not have the time to edit them properly and hence it is not ready for a broad
+#       audience yet!
+
+# NOTE: Throughout this guide the username 'jmeng2m' and the hostname 'wr0.wr.inf.h-brs.de' are used to login into the
+#       frontend node of the HPC cluster. Change them to appropiate values!
+
+# NOTE: Path '/home/jmeng2m' denotes the user's home directory on the HPC cluster, while '/scratch/jmeng2m' points to an
+#       arbitrary directory where the heavy computations are performed. Choose whatever path satisfies your performance
+#       and storage requirements best.
+
+####################
+# Preparations
+
+# First choose a prefix path, GENTOO_PREFIX, where Gentoo Linux is going to be installed to, e.g. $HOME/gentoo.
+#
+# NOTE: The prefix path has to be writeable and must reside on a filesystem which has been mounted without noexec!
+
+# Login to the HPC cluster
+ssh jmeng2m@wr0.wr.inf.h-brs.de
+
+# Prepare your user's profile
+cat << 'EOF' >> .bashrc
+export GENTOO_PREFIX=$HOME/gentoo
+
+export MODULEPATH=/usr/local/modules/modulesfiles:$MODULEPATH
+
+export PATH=$HOME/.local/bin:$PATH
+
+# qtchooser uses hardcoded search paths ~/.config/qtchooser/ and /etc/xdg/qtchooser/ [1]
+# instead of $GENTOO_PREFIX, if XDG_CONFIG_DIRS is not set. Reason for this is the
+# XDG Base Directory Specification, which says "If $XDG_CONFIG_DIRS is either not set
+# or empty, a value equal to /etc/xdg should be used." [2].
+#
+# Ref.:
+# [1] https://code.qt.io/cgit/qtsdk/qtchooser.git/tree/src/qtchooser/main.cpp#n457
+# [2] https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+export XDG_CONFIG_DIRS="$GENTOO_PREFIX/etc/xdg/:$XDG_CONFIG_DIRS"
+
+# Force offscreen rendering for Qt5 applications, because without a screen attached you'll get an error:
+#  qt.qpa.xcb: could not connect to display
+#  qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+#  This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may
+#  fix this problem.
+#  Available platform plugins are: minimal, offscreen, xcb.
+export QT_QPA_PLATFORM=offscreen
+
+# Unset variables defined in /etc/profile.d/ that break Gentoo Prefix
+unset LD_LIBRARY_PATH
+unset PERL5LIB
+unset PERL_HOMEDIR
+unset PERL_LOCAL_LIB_ROOT
+unset PERL_MB_OPT
+unset PERL_MM_OPT
+EOF
+
+bash # or logout and login again to apply changes
+
+# TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+# TODO TODO TODO TODO TODO The content below has to be edited properly before being useful! TODO TODO TODO TODO TODO
+# TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+# Setup a Gentoo system using Gentoo Prefix
+#
+# Follow guides:
+#  - 'Gentoo - Grundinstallation.txt'
+#    + 'Setup a Gentoo system using Gentoo Prefix'
+#      * 'Useful software'
+#      * 'Configure locales'
+#      * 'Configuration file updates'
+#      * 'Read news'
+#      * 'CMake'
+#  - 'Gentoo - Paketverwaltung.txt'
+#    + 'eselect/repository'
+#
+# TODO: Edit and publish those guides!
+
+mkdir -p $HOME/.local/bin
+mkdir -p $GENTOO_PREFIX/usr/local/portage/
+# Execute ./upload.sh on your host
+
+# Setup a custom repository
+#
+# Follow guides:
+#  - 'Gentoo - Entwicklung Paketentwicklung Programmierung Skripte.txt'
+#    + 'portage package development'
+#      * 'Custom repository'
+#
+# TODO: Edit and publish those guides!
+
+(cd "$GENTOO_PREFIX/usr/portage/" && \
+ cat "$GENTOO_PREFIX/usr/local/src/sys-apps_iproute2_iproute2-"*.patch | patch -p1 && \
+ cd sys-apps/iproute2 && \
+ repoman manifest)
+
+# fix for https://bugs.gentoo.org/675858
+(cd "$GENTOO_PREFIX/usr/portage/" && \
+ cat "$GENTOO_PREFIX/usr/local/src/dev-qt_qtcore_qtcore-"*.patch | patch -p1 && \
+ cd dev-qt/qtcore && \
+ repoman manifest)
+
+(cd "$GENTOO_PREFIX/usr/portage/" && \
+ cat "$GENTOO_PREFIX/usr/local/src/sys-block_thin-provisioning-tools_thin-provisioning-tools-"*.patch | patch -p1 && \
+ cd sys-block/thin-provisioning-tools && \
+ repoman manifest)
+
+(cd "$GENTOO_PREFIX/usr/portage/" && \
+ cat "$GENTOO_PREFIX/usr/local/src/app-emulation_libpod_libpod-"*.patch | patch -p1 && \
+ cd app-emulation/libpod && \
+ repoman manifest)
+
+(cd "$GENTOO_PREFIX/usr/portage/" && \
+ (cd sci-visualization/paraview && cp -raiv paraview-5.6.1.ebuild paraview-5.6.2.ebuild) && \
+ cat "$GENTOO_PREFIX/usr/local/src/sci-visualization_paraview_paraview-"*.patch | patch -p1 && \
+ cd sci-visualization/paraview && \
+ repoman manifest)
+
+(cd "$GENTOO_PREFIX/usr/portage/" && \
+ cat "$GENTOO_PREFIX/usr/local/src/sys-libs_pam_pam-"*.patch | patch -p1 && \
+ cd sys-libs/pam && \
+ repoman manifest)
+
+(cd "$GENTOO_PREFIX/usr/portage/" && \
+ (cd sys-cluster/slurm && cp -raiv slurm-19.05.5.1.ebuild slurm-18.08.9.1.ebuild) && \
+ cat "$GENTOO_PREFIX/usr/local/src/sys-cluster_slurm_slurm-"*.patch | patch -p1 && \
+ cd sys-cluster/slurm && \
+ repoman manifest)
+
+REPONAME=wana
+
+(for PKG in \
+    sci-libs/elemental \
+    sci-libs/flame \
+    sci-libs/hbrs-cmake \
+    sci-libs/hbrs-mpl \
+    sci-libs/hbrs-theta_utils \
+    sys-fabric/libibmad \
+    sys-fabric/libibumad \
+    sys-fabric/librdmacm \
+    sys-fabric/ofed \
+    sys-fabric/opa-psm2 \
+    sys-fabric/rdma-core \
+    ; do cd $GENTOO_PREFIX/usr/local/portage/${PKG}; repoman manifest; done)
+
+ln -s /etc/profile.d/modules.sh $GENTOO_PREFIX/etc/profile.d/modules.sh
+ln -s /usr/share/bash-completion/completions/yum $GENTOO_PREFIX/usr/share/bash-completion/completions/yum
+
+eselect repository enable raiagent
+eselect repository enable mva # Ref.: https://github.com/msva/mva-overlay/
+emaint sync -a
+vi $GENTOO_PREFIX/etc/portage/repos.conf/eselect-repo.conf
+# Add 'priority = -2000' to 'raiagent' and 'mva' repositories
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/dev-lang_python
+dev-lang/python sqlite
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/app-editors_vim
+app-editors/vim python
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/media-fonts_powerline-fonts
+media-fonts/powerline-fonts arimo cousine 3270 anonymouspro arimo cousine dejavusansmono droidsansmono droidsansmonodotted droidsansmonoslashed firamono gomono hack inconsolata inconsolatadz inconsolata-g liberationmono meslodotted mesloslashed monofur notomono novamono profont robotomono sourcecodepro spacemono symbolneu terminus_pcf tinos ubuntumono
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/app-misc_powerline
+app-misc/powerline bash fonts man vim
+EOF
+
+# sys-fs/lvm2 installs files outside of the prefix if use flag 'udev' is enabled (by default)
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/sys-fs_lvm2
+sys-fs/lvm2 -udev
+EOF
+
+emerge --ask --update --deep --newuse @world
+emerge --ask --depclean
+revdep-rebuild
+
+
+emerge --ask --verbose app-shells/fzf::mva
+
+emerge --ask --verbose app-misc/powerline::raiagent
+
+# TODO: Replace $HOME/.bashrc-jmeng2m with $HOME/.bashrc ???
+cat << 'EOF' >> $HOME/.bashrc-jmeng2m
+
+if [[ ${SHELL#${GENTOO_PREFIX}} != ${SHELL} ]] ; then
+    # only in Gentoo Prefix do
+    [ -e $GENTOO_PREFIX/usr/share/powerline/bash/powerline.sh ] && \
+      . $GENTOO_PREFIX/usr/share/powerline/bash/powerline.sh
+fi
+EOF
+
+emerge --ask --verbose app-benchmarks/bonnie++
+
+####################
+# Build dependencies
+
+# e2fsprogs fails to build
+mkdir $GENTOO_PREFIX/etc/portage/package.use
+cat << 'EOF' > $GENTOO_PREFIX/etc/portage/package.use/app-arch_libarchive
+app-arch/libarchive -e2fsprogs
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/virtual_mpi
+virtual/mpi romio
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/sys-cluster_openmpi
+sys-cluster/openmpi openmpi_rm_slurm
+sys-cluster/openmpi numa
+sys-cluster/openmpi openmpi_fabrics_ofed
+sys-cluster/openmpi openmpi_ofed_features_control-hdr-padding openmpi_ofed_features_udcm openmpi_ofed_features_rdmacm openmpi_ofed_features_dynamic-sl
+sys-cluster/openmpi romio
+EOF
+
+# NOTE: On 26.02.2020, slurm on wr0.wr.inf.h-brs.de has been updated 19.05.5, which now allows us to upgrade as well
+#       and renders the following package mask unnecessary.
+#cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.mask/sys-cluster_slurm
+## Gentoo has 19.05.* which has compatibility problems with 18.08.* of wr0.wr.inf.h-brs.de
+#>sys-cluster/slurm-18.08.9.1
+#EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/sys-cluster_slurm
+sys-cluster/slurm html json lua numa ofed ssl
+# ipmi results in warning messages like
+#  [warn] Epoll ADD(1) on fd 0 failed. Old events were 0; read change was 1 (add); write change was 0 (none); close change was 0 (none): Operation not permitted
+#sys-cluster/slurm ipmi
+EOF
+
+# Build with Intel Omni-Path support
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/env/sys-cluster_openmpi.conf
+EXTRA_ECONF="$EXTRA_ECONF --with-psm2"
+EOF
+
+# Enable MPI1 for OpenMPI 4.0.x
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/env/sys-cluster_openmpi.conf
+EXTRA_ECONF="$EXTRA_ECONF --enable-mpi1-compatibility"
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.env
+sys-cluster/openmpi sys-cluster_openmpi.conf
+EOF
+
+# https://packages.gentoo.org/packages/sci-visualization/paraview
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/sci-visualization_paraview
+sci-visualization/paraview mpi openmp python
+sci-visualization/paraview offscreen -qt5
+EOF
+
+# NOTE: Only required if use flag 'offscreen' has been selected for sci-visualization/paraview
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/media-libs_mesa
+# required by sci-visualization/paraview-5.6.1::gentoo[offscreen]
+# required by @selected
+# required by @world (argument)
+>=media-libs/mesa-19.3.2 osmesa
+EOF
+
+##########
+# Qt5
+# NOTE: Only required if use flag 'qt5' has been selected forsci-visualization/paraview
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/x11-libs_libxcb
+# required by dev-qt/qtgui-5.12.1-r1::gentoo[xcb]
+# required by dev-qt/qtwidgets-5.12.1::gentoo
+# required by app-crypt/pinentry-1.1.0-r3::gentoo[qt5]
+# required by app-crypt/gnupg-2.2.12::gentoo
+# required by app-crypt/gpgme-1.12.0::gentoo
+# required by app-emulation/cri-o-1.13.0::gentoo
+# required by app-emulation/libpod-1.1.2::gentoo
+# required by @selected
+# required by @world (argument)
+>=x11-libs/libxcb-1.13.1 xkb
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/dev-libs_libpcre2
+# required by dev-qt/qtcore-5.12.1::gentoo
+# required by dev-qt/qtgui-5.12.1-r1::gentoo
+# required by dev-qt/qtwidgets-5.12.1::gentoo
+# required by app-crypt/pinentry-1.1.0-r3::gentoo[qt5]
+# required by app-crypt/gnupg-2.2.12::gentoo
+# required by app-crypt/gpgme-1.12.0::gentoo
+# required by app-emulation/cri-o-1.13.0::gentoo
+# required by app-emulation/libpod-1.1.2::gentoo
+# required by @selected
+# required by @world (argument)
+>=dev-libs/libpcre2-10.32 pcre16
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/dev-qt_qtwebengine
+# required by sci-visualization/paraview-5.6.1::gentoo[qt5]
+# required by @selected
+# required by @world (argument)
+>=dev-qt/qtwebengine-5.12.3 widgets
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/dev-qt_qtwebchannel
+# required by dev-qt/qtwebengine-5.12.5::gentoo
+# required by sci-visualization/paraview-5.6.1::gentoo[qt5]
+# required by @selected
+# required by @world (argument)
+>=dev-qt/qtwebchannel-5.12.3 qml
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/dev-python_PyQt5
+# required by sci-visualization/paraview-5.6.1::gentoo[qt5,python]
+# required by sci-visualization/paraview (argument)
+dev-python/PyQt5 gui widgets opengl webkit network printsupport
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/dev-libs_libxml2
+# required by dev-qt/qtwebengine-5.12.5::gentoo
+# required by sci-visualization/paraview-5.6.1::gentoo[qt5]
+# required by @selected
+# required by @world (argument)
+>=dev-libs/libxml2-2.9.9-r1 icu
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/media-libs_libvpx
+# required by dev-qt/qtwebengine-5.12.5::gentoo
+# required by sci-visualization/paraview-5.6.1::gentoo[qt5]
+# required by @selected
+# required by @world (argument)
+>=media-libs/libvpx-1.8.0-r1 svc
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/sys-libs_zlib
+# required by dev-qt/qtwebengine-5.12.5::gentoo
+# required by sci-visualization/paraview-5.6.1::gentoo[qt5]
+# required by @selected
+# required by @world (argument)
+>=sys-libs/zlib-1.2.11-r2 minizip
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/dev-qt_qtcore
+dev-qt/qtcore ancient-kernel-support
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/dev-qt_qtgui
+dev-qt/qtgui -libinput
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/make.conf
+USE="$USE qt5 X"
+EOF
+
+##########
+# (Optional) Build static OpenMPI, so that OpenMPI programs can be launched via system-provided/non-gentoo-prefix slurm
+# NOTE: Building static OpenMPI libraries might require different mpicc flags, e.g. mpicc -ldl main.c
+mkdir $GENTOO_PREFIX/etc/portage/env/
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/env/sys-cluster_openmpi.conf
+EXTRA_ECONF="$EXTRA_ECONF --enable-static --disable-shared --disable-dlopen"
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.env
+sys-cluster/openmpi sys-cluster_openmpi.conf
+EOF
+##########
+
+emerge --ask --verbose sys-fabric/opa-psm2 # required for Intel Omni-Path support (e.g. wr50-wr99) in OpenMPI
+emerge --ask --verbose --oneshot sys-cluster/slurm # build slurm first to prevent circular dependency
+                                                   # between openmpi and slurm
+
+# OpenMPI 4.0.2 is required because it contains necessary bug fixes
+# Ref.: https://github.com/open-mpi/ompi/issues/6618
+emerge --ask --verbose ">=sys-cluster/openmpi-4.0.2"
+
+emerge --ask --verbose --clean sys-cluster/ucx
+# ucx is slower than cm for Intel Omni-Path [1] but the default MPI network model of e.g. OpenMPI 3.1.3 [2],
+# thus we remove it and rebuild OpenMPI package.
+# Ref.:
+#  [1] https://github.com/openucx/ucx/issues/3196
+#  [2] "Open MPI will, by default, choose to use "cm" when one of the
+#       above transports can be used, unless OpenUCX or MXM support is
+#       detected, in which case the "ucx" or "yalla" PML will be used
+#       by default.", https://github.com/open-mpi/ompi/blob/v3.1.x/README
+
+emerge --ask --update --deep --newuse --verbose @world
+emerge --ask --depclean
+emerge --ask @preserved-rebuild
+revdep-rebuild --ignore --pretend
+revdep-rebuild
+
+emerge --ask --verbose dev-vcs/git sys-devel/gcc sys-devel/make dev-lang/python sci-libs/netcdf
+emerge --ask --verbose sci-visualization/paraview
+emerge --ask --verbose net-misc/socat
+
+####################
+# OpenMPI and Slurm configuration
+
+which ibv_devinfo
+# $HOME/gentoo/usr/bin/ibv_devinfo
+ibv_devinfo
+
+for f in cgroup.conf slurm.conf slurmdbd.conf topology.conf; do
+    ln -s /usr/local/slurm/slurm-18.08.3/etc/$f $GENTOO_PREFIX/etc/slurm/$f
+done
+
+(cd $GENTOO_PREFIX/var/ && ln -s ../run run)
+(cd $GENTOO_PREFIX/run/ && ln -s /var/run/munge/ munge)
+
+# NOTE: You have to manually adjust MPI parameters in Gentoo Prefix to
+#       match those configured by the system-provided MPI setup!
+
+# Find out MPI parameters configured by system-provided MPI
+# Ref.: https://www.open-mpi.org/faq/?category=troubleshooting#seeing-mca-params
+
+cd /scratch/jmeng2m/mpi_info
+
+# outside Gentoo Prefix
+mpicc -O2 main.c
+sbatch.no_prefix ./job.sh
+sort 'mca_params.txt' > 'mca_params.system-provided.txt'
+
+# identify non-default MPI parameters
+grep -v '(default)' 'mca_params.system-provided.txt'
+
+# within Gentoo Prefix
+mpicc -O2 main.c
+sbatch.prefix ./job.sh
+sort 'mca_params.txt' > 'mca_params.gentoo-prefix.txt'
+
+# example MPI parameters
+[ ! -e "$HOME/.openmpi" ] && mkdir "$HOME/.openmpi"
+cat << 'EOF' >> "$HOME/.openmpi/mca-params.conf"
+##########
+# wr0-defaults
+db = ^pmi
+# Using OpenMPI 2.0.2 the process stops immediately without any output
+#ess env
+grpcomm = ^pmi
+mpi_yield_when_idle = false
+
+##########
+# additional options
+
+# let root process print all OpenMPI parameters to stdout
+#mpi_show_mca_params = all
+
+# disable slow communication paths or..
+#btl = ^tcp
+pml = ^ucx
+# ^ucx is only neccessary if ucx was compiled into OpenMPI
+
+# ..enable fast communication paths
+#pml = cm
+#mtl = psm2
+
+# Disable OpenMPI 4.0+ "WARNING: There was an error initializing an OpenFabrics device."
+# Ref.: https://www.open-mpi.org/faq/?category=openfabrics#ofa-device-error
+btl = ^openib
+
+EOF
+
+####################
+# MPI network benchmark
+
+# NOTE: File mpi2.c is copyrighted by Rudolf Berrendorf, Bonn-Rhein-Sieg University of Applied Sciences and hence cannot
+#       be distributed with this project.
+
+# TODO: Get permission for distribution from Rudolf Berrendorf or implement new, open-source benchmark
+
+# Copy required files to HPC cluster
+scp -rp mpi2.c jmeng2m@wr0.wr.inf.h-brs.de:/scratch/jmeng2m/mpi_network_benchmark/
+
+# Login to the HPC cluster
+ssh jmeng2m@wr0.wr.inf.h-brs.de
+
+cd /scratch/jmeng2m/mpi_network_benchmark/
+cat mpi2.c.patch | patch
+
+# execute benchmark outside Gentoo Prefix
+module load openmpi/gnu
+mpicc \
+    -std=c99 \
+    -O2 \
+    -I/usr/local/libFHBRS/libFHBRS-3.1/ \
+    mpi2.c \
+    -L/usr/local/libFHBRS/libFHBRS-3.1/ \
+    -lFHBRS \
+    -lX11 \
+    -lpthread \
+    -o bin_no_prefix
+
+sbatch ./job.no_prefix.sh
+
+# execute benchmark within Gentoo Prefix
+cp -raiv /usr/local/libFHBRS/libFHBRS-3.1/ .
+cd libFHBRS-3.1/
+patch Makefile Makefile.patch
+make clean
+make
+cd ../
+mpicc -O2 -IlibFHBRS-3.1/ mpi2.c -LlibFHBRS-3.1/ -lFHBRS -lX11 -lpthread -o bin_prefix
+sbatch.prefix ./job.prefix.sh
+
+####################
+# MPI example
+# Ref.: https://hpcc.usc.edu/support/documentation/examples-of-mpi-programs/
+
+cd /scratch/jmeng2m/mpi_example
+mpicc -O2 main.c
+
+sbatch.no_prefix ./job.sh # outside Gentoo Prefix
+# or
+sbatch.prefix ./job.sh # within Gentoo Prefix
+
+####################
+# TAU and THETA
+#
+# NOTE: TAU and THETA require a valid license from the German Aerospace Center!
+#
+# Ref.:
+#  http://www.dlr.de/
+#  http://tau.dlr.de/
+
+emerge --ask --verbose \
+    sys-devel/gcc \
+    sys-devel/make \
+    sci-libs/netcdf \
+    dev-lang/swig \
+    sys-cluster/openmpi \
+    dev-lang/python \
+    dev-vcs/subversion \
+    x11-libs/xforms
+
+scp -rp taudir/ jmeng2m@wr0.wr.inf.h-brs.de:/home/jmeng2m/
+mv -i taudir/ gentoo/opt/
+
+cat << 'EOF' >> $HOME/.bashrc
+export TAUHOME="$GENTOO_PREFIX/opt/taudir"
+export PATH="$TAUHOME/bin":$PATH
+EOF
+bash
+
+ln -s ~/.taudef.gentoo-prefix ~/.taudef
+
+(cd "$TAUHOME" && \
+ cat "$GENTOO_PREFIX/usr/local/src/TAU-Make-isoplot99-compatible-to-xforms-124.patch" | patch -p1)
+
+cd "$TAUHOME" && \
+  cp -p "$TAUHOME/src/Theta/Solver/user_ref.c" "$TAUHOME/src/Theta/Solver/user.c" && \
+  make taulib -j$(nproc) && \
+  make all -j$(nproc) && \
+  make dist -j$(nproc) && \
+  make taupy -j$(nproc) && \
+  make theta -j$(nproc) && \
+  make prep -j$(nproc) && \
+  make addon -j$(nproc) && \
+  make adap -j$(nproc) && \
+  make thetaradiation -j$(nproc) && \
+  make iso99 -j$(nproc) && \
+  make ppart -j$(nproc)
+
+####################
+# hbrs-cmake, hbrs-mpl, hbrs-theta_utils
+
+# Follow guides:
+#  - 'Gentoo - Paketverwaltung.txt'
+#    + 'BLAS/LAPACK runtime switch'
+#    + 'Gentoo Science Overlay'
+
+(cd "$GENTOO_PREFIX/var/db/repos/science/" && \
+ cat "$GENTOO_PREFIX/usr/local/src/sci-libs_scalapack_scalapack-2.0.2-r1.ebuild.patch" | patch -p1 && \
+ cd sci-libs/scalapack && \
+ repoman manifest)
+(cd "$GENTOO_PREFIX/var/db/repos/science/" && \
+ cat "$GENTOO_PREFIX/usr/local/src/virtual_blas_blas-3.7-r100.ebuild.patch" | patch -p1 && \
+ cd virtual/blas && \
+ repoman manifest)
+
+emerge --ask --verbose sci-libs/scalapack
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/sci-libs_lapack
+sci-libs/lapack lapacke
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/dev-util_valgrind
+dev-util/valgrind mpi
+EOF
+emerge --ask --verbose dev-util/valgrind
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/sci-libs_elemental
+sci-libs/elemental openmp valgrind -scalapack
+EOF
+
+# Workaround 'Target "elemental" links to target "Qt5::Widgets" but the target was not found.' bug in Elemental
+# Ref.: https://github.com/elemental/Elemental/pull/275
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/sci-libs_elemental
+sci-libs/elemental -qt5
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/sci-libs_elemental
+sci-libs/elemental debug
+EOF
+
+cat << 'EOF' >> $GENTOO_PREFIX/etc/portage/package.use/sci-libs_openblas
+sci-libs/openblas openmp
+EOF
+
+emerge --ask --verbose ">=sci-libs/openblas-0.3.5"
+eselect blas set openblas
+eselect lapack set openblas
+
+emerge --ask --verbose --oneshot sci-libs/flame
+emerge --ask --verbose --oneshot sci-libs/elemental
+
+emerge --ask --verbose dev-libs/boost
+#emerge --ask --verbose --oneshot dev-libs/jsoncpp # bug: build requirement of sci-libs/vtk but not marked as such in ebuild!
+#emerge --ask --verbose --oneshot dev-libs/json-c
+cat << 'EOF' > $GENTOO_PREFIX/etc/portage/package.use/sci-libs_vtk
+sci-libs/vtk json mpi
+EOF
+
+cat << 'EOF' > $GENTOO_PREFIX/etc/portage/package.use/sci-libs_netcdf
+sci-libs/netcdf mpi hdf5 szip
+EOF
+
+cat << 'EOF' > $GENTOO_PREFIX/etc/portage/package.use/sci-libs_hdf5
+sci-libs/hdf5 mpi szip -cxx
+EOF
+
+emerge --ask --verbose dev-libs/json-c
+emerge --ask --verbose dev-libs/jsoncpp
+
+ln -s $GENTOO_PREFIX/usr/include/jsoncpp/json/ $GENTOO_PREFIX/usr/include/json # else sci-libs/vtk won't find JsonCpp
+emerge --ask --verbose sci-libs/vtk
+
+#emerge --ask --verbose sys-devel/clang
+
+cat << 'EOF' > $GENTOO_PREFIX/etc/portage/package.use/sci-libs_hbrs-mpl
+sci-libs/hbrs-mpl debug
+EOF
+
+cat << 'EOF' > $GENTOO_PREFIX/etc/portage/package.use/sci-libs_hbrs-theta_utils
+sci-libs/hbrs-theta_utils debug
+EOF
+
+emerge --ask --verbose --oneshot hbrs-cmake
+emerge --ask --verbose --oneshot hbrs-mpl
+emerge --ask --verbose hbrs-theta_utils
+
+# for file upload to ftp.dlr.de
+emerge --ask --verbose net-ftp/ftp
+
+####################
+# system backup
+
+tar -cvzf "/scratch/jmeng2m/gentoo_prefix_home_jmeng2m_gentoo_$(date +%Y%m%d%H%M%S).tar.gz" "$HOME/gentoo/"
+
+####################

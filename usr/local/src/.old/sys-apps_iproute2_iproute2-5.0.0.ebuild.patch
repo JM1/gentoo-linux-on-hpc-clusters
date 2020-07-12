@@ -1,0 +1,10 @@
+--- a/sys-apps/iproute2/iproute2-5.0.0.ebuild.orig	2019-03-19 21:09:34.000000000 -0000
++++ b/sys-apps/iproute2/iproute2-5.0.0.ebuild	2019-04-12 18:25:37.450778640 -0000
+@@ -129,6 +129,7 @@
+ 
+ 	emake \
+ 		DESTDIR="${D}" \
++		PREFIX="${EPREFIX%/}"/usr \
+ 		LIBDIR="${EPREFIX%/}"/$(get_libdir) \
+ 		SBINDIR="${EPREFIX%/}"/sbin \
+ 		CONFDIR="${EPREFIX%/}"/etc/iproute2 \

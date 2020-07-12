@@ -1,0 +1,15 @@
+# THETA/TAU Definitions for Gentoo Prefix
+
+NETCDF_INC      = $(GENTOO_PREFIX)/usr/include
+NETCDF_LIB      = $(GENTOO_PREFIX)/usr/lib64
+PARALLEL_INC    = $(GENTOO_PREFIX)/usr/include/openmpi
+PARALLEL_LIB    = $(GENTOO_PREFIX)/usr/lib64
+PYTHON_INC_FILE = $(GENTOO_PREFIX)/usr/include/python2.7
+PYTHON_BIN_FILE = $(GENTOO_PREFIX)/usr/bin/python
+SWIG_BIN_FILE   = $(GENTOO_PREFIX)/usr/bin/swig
+PLATFORM        = GENERIC_gcc_MPI
+HAVE_ZOLTAN_LIB = 0
+X_LIB     = $(GENTOO_PREFIX)/usr/lib64
+X_INC     = $(GENTOO_PREFIX)/usr/include
+XFORM_INC = $(GENTOO_PREFIX)/usr/include
+XFORM_LIB = $(GENTOO_PREFIX)/usr/lib64

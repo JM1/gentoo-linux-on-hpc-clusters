@@ -1,0 +1,15 @@
+--- a/eclass/pam.eclass	2019-12-02 15:39:48.000000000 -0000
++++ b/eclass/pam.eclass	2020-01-10 13:20:59.340558304 -0000
+@@ -95,10 +95,10 @@
+ # Returns the pam modules' directory for current implementation
+ getpam_mod_dir() {
+ 	if has_version sys-libs/pam; then
+-		PAM_MOD_DIR=/$(get_libdir)/security
++		PAM_MOD_DIR="${EPREFIX}"/$(get_libdir)/security
+ 	else
+ 		# Unable to find PAM implementation... defaulting
+-		PAM_MOD_DIR=/$(get_libdir)/security
++		PAM_MOD_DIR="${EPREFIX}"/$(get_libdir)/security
+ 	fi
+ 
+ 	echo ${PAM_MOD_DIR}

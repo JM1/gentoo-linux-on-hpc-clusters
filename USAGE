@@ -1,0 +1,165 @@
+#!/bin/sh
+# shebang is here only to enable syntax highlighting in Kate
+exit
+
+# vim:set syntax=sh fileformat=unix shiftwidth=4 softtabstop=4 expandtab textwidth=120:
+# kate: syntax bash; end-of-line unix; space-indent on; indent-width 4; word-wrap-column 120; word-wrap on;
+# kate: remove-trailing-space on;
+#
+# Copyright (c) 2019-2020 Jakob Meng, <jakobmeng@web.de>
+#
+# How To Use Gentoo Prefix at HPC Cluster wr0.wr.inf.h-brs.de
+#
+# The following guide showcases how to interact with Gentoo Linux while being logged into our university's HPC cluster
+# wr0.wr.inf.h-brs.de, how to run applications from within the Gentoo Prefix environment and how to schedule jobs with
+# the host OS scheduler.
+#
+# For an introduction have a look at https://github.com/JM1/gentoo-linux-on-hpc-clusters/blob/master/README.md first!
+#
+# NOTE: This guide is work-in-progress! It resembles more of a personal sketchpad than a complete guide, it is still
+#       missing important steps as I did not have the time to edit them properly and hence it is not ready for a broad
+#       audience yet!
+
+# NOTE: Throughout this guide the username 'jmeng2m' and the hostname 'wr0.wr.inf.h-brs.de' are used to login into the
+#       frontend node of the HPC cluster. Change them to appropiate values!
+
+# NOTE: Path '/home/jmeng2m' denotes the user's home directory on the HPC cluster, while '/scratch/jmeng2m' points to an
+#       arbitrary directory where the heavy computations are performed. Choose whatever path satisfies your performance
+#       and storage requirements best.
+
+# TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+# TODO TODO TODO TODO TODO The content below has to be edited properly before being useful! TODO TODO TODO TODO TODO
+# TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+####################
+# Kármán vortex street
+
+# Copy required files to HPC cluster
+scp -rp karman.grid.xz user_karman.c jmeng2m@wr0.wr.inf.h-brs.de:/scratch/jmeng2m/aeromat/karman_vortex_street/
+
+# Login to the HPC cluster
+ssh jmeng2m@wr0.wr.inf.h-brs.de
+
+[ ! -e /scratch/jmeng2m/aeromat/ ] && mkdir /scratch/jmeng2m/aeromat/
+cp -raiv "$HOME/aeromat/karman_vortex_street/" /scratch/jmeng2m/aeromat/
+cd /scratch/jmeng2m/aeromat/karman_vortex_street/
+
+unxz karman.grid.xz
+mv -i karman.para.orig karman.para
+
+"${TAUHOME}/src/Theta/Tools/compile" karman
+"${TAUHOME}/bin/ptau3d.subgrids" karman.para logsub
+
+sbatch.prefix ./preprocessing_job.sh
+# wait till job finished
+sbatch.prefix ./theta_job.sh
+sbatch.prefix ./pca_job.sh
+sbatch.prefix ./visualize_job.sh
+squeue -u jmeng2m
+
+####################
+# side mirror
+
+# Copy required files to HPC cluster
+scp -rp car.grid.xz jmeng2m@wr0.wr.inf.h-brs.de:/scratch/jmeng2m/aeromat/side_mirror/
+
+# Login to the HPC cluster
+ssh jmeng2m@wr0.wr.inf.h-brs.de
+
+[ ! -e /scratch/jmeng2m/aeromat/ ] && mkdir /scratch/jmeng2m/aeromat/
+cp -raiv "$HOME/aeromat/side_mirror/" /scratch/jmeng2m/aeromat/
+cd /scratch/jmeng2m/aeromat/side_mirror/
+
+unxz car.grid.xz
+mv -i car.para.orig car.para
+
+"${TAUHOME}/bin/ptau3d.subgrids" car.para logsub
+
+sbatch.prefix ./preprocessing_job.sh
+# wait till job finished
+sbatch.prefix ./tau_job.sh
+sbatch.prefix ./pca_job.sh
+sbatch.prefix ./visualize_job.sh
+squeue -u jmeng2m
+
+
+vi car.para
+# Set "Output format" to
+#  Output format: ensight_gold
+tau2plt car.para
+# The resulting *.case file can be visualized in ParaView
+
+####################
+# side mirror 2
+
+# Copy required files to HPC cluster
+scp -rp car.grid.xz jmeng2m@wr0.wr.inf.h-brs.de:/scratch/jmeng2m/aeromat/side_mirror_2/
+
+# Login to the HPC cluster
+ssh jmeng2m@wr0.wr.inf.h-brs.de
+
+[ ! -e /scratch/jmeng2m/aeromat/ ] && mkdir /scratch/jmeng2m/aeromat/
+cp -raiv "$HOME/aeromat/side_mirror_2/" /scratch/jmeng2m/aeromat/
+cd /scratch/jmeng2m/aeromat/side_mirror_2/
+
+unxz car.grid.xz
+mv -i car.para.orig car.para
+
+"${TAUHOME}/bin/ptau3d.subgrids" car.para logsub
+
+sbatch.prefix ./preprocessing_job.sh
+# wait till job finished
+sbatch.prefix ./tau_job.sh
+sbatch.prefix ./pca_job.sh
+sbatch.prefix ./visualize_job.sh
+
+squeue -u jmeng2m
+
+archive.sh
+
+##########
+# remote visualization with ParaView Server and frontend node
+
+paraview # run on your local system
+# NOTE: Both the ParaView client and server must have matching version numbers!
+#       Download ParaView here: https://www.paraview.org/download/
+# In ParaView click in menu bar on
+# -> File
+# -> Connect
+# -> Add Server
+# -> Server Type: Client / Server (reverse connection)
+#    Port: 31337
+# -> Startup Type: Manual
+# -> Save
+
+ssh -R 31337:localhost:31337 jmeng2m@wr0.wr.inf.h-brs.de
+
+pvserver --server-port=31337 --reverse-connection --client-host=localhost --force-offscreen-rendering --disable-xdisplay-test
+
+##########
+# remote visualization with ParaView Server and cluster nodes
+
+# First do the same steps you would do for remote visualization with
+# just one node, until you have established the ssh reverse tunnel.
+
+# OpenSSH Server only allows listening to localhost by default,
+# so we use socat to listen for all incoming connections and
+# then to redirect this traffic to ther reverse ssh tunnel.
+socat tcp-listen:31336,reuseaddr,fork tcp:localhost:31337
+
+sbatch.prefix ./pvserver_job.sh
+
+##########
+# remote animation with pvpython, ParaView Server and cluster nodes
+
+pvpython --force-offscreen-rendering animate.py -v -v -v --reverse-connect # run on your local system
+# or e.g.
+pvpython --force-offscreen-rendering animate.py -v -v -v --reverse-connect --tags pca_centered_normalized_all --velocity-coordinates X --frame-window 0 0
+
+# Use option '--force-offscreen-rendering' to be able to
+# use image resolutions larger than display resolution.
+
+# Now do the same steps you would do for remote visualization with cluster nodes
+# You do not have to start ParaView locally, because we are using pvpython instead.
+
+####################

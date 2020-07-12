@@ -1,0 +1,11 @@
+--- Makefile.orig	2019-04-04 06:48:31.972355313 -0000
++++ Makefile	2019-04-04 06:49:22.753342306 -0000
+@@ -16,7 +16,7 @@
+ 
+ # GNU C compiler
+ CC		= cc
+-CFLAGS		= -std=c99 -g -O2 -Wall -Wstrict-prototypes 
++CFLAGS		= -std=c99 -g -O2 -Wall -Wstrict-prototypes -fPIC
+ CFLAGS_SHARED	= $(DEFINES) $(CFLAGS) -shared
+ 
+ # Intel C compiler
