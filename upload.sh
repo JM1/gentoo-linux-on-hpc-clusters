@@ -9,11 +9,11 @@
 set -e
 set -x
 
-[ -n "$1" ] && SRV_HOST="$1"          || SRV_HOST=wr0.wr.inf.h-brs.de
-[ -n "$2" ] && SRV_USER="$2"          || SRV_USER=jmeng2m
-[ -n "$3" ] && SRV_HOME="$3"          || SRV_HOME=/home/$SRV_USER
-[ -n "$4" ] && SRV_GENTOO_PREFIX="$4" || SRV_GENTOO_PREFIX=$SRV_HOME/gentoo
-[ -n "$5" ] && SRV_SCRATCH="$5"       || SRV_SCRATCH=/scratch/$SRV_USER
+          SRV_HOST=${1:-"wr0.wr.inf.h-brs.de"}
+          SRV_USER=${2:-"jmeng2m"}
+          SRV_HOME=${3:-"/home/$SRV_USER"}
+ SRV_GENTOO_PREFIX=${4:-"$SRV_HOME/gentoo"}
+       SRV_SCRATCH=${5:-"/scratch/$SRV_USER"}
 
 scp -rp home/* home/.local/ home/.taudef* "$SRV_USER@$SRV_HOST:$SRV_HOME/"
 scp -rp scratch/* "$SRV_USER@$SRV_HOST:$SRV_SCRATCH/"

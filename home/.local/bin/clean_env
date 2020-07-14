@@ -28,9 +28,6 @@ done < <(
     env | grep '^QT[^=]*=.*'
 )
 
-ARGS=
-for ARG in "$@"; do
-    ARGS="$ARGS \"$ARG\""
-done
+ARGS=$(printf ' "%s"' "$@")
 
 eval env -i $RETAIN "$SHELL" -l -c \"\$ARGS\"

@@ -9,38 +9,32 @@
 #set -x
 
 if [ -z "$1" ]; then
-    echo "No command given" > /dev/stderr
+    echo "No command given" >&2
     exit -1
 fi
 
-if [ -z "$GENTOO_PREFIX" ]; then
-    echo "GENTOO_PREFIX is not set" > /dev/stderr
-    exit -1
-fi
+: ${GENTOO_PREFIX:?}
 
 EPREFIX="$GENTOO_PREFIX"
 
 if [[ ${SHELL#${EPREFIX}} != ${SHELL} ]] ; then
-        echo "You appear to be in prefix already (SHELL=$SHELL)" > /dev/stderr
+        echo "You appear to be in prefix already (SHELL=$SHELL)" >&2
         exit -1
 fi
 
 SHELL=${SHELL##*/}
 export SHELL=${EPREFIX}/bin/${SHELL}
 if [[ ! -x $SHELL ]] ; then
-        echo "Failed to find the Prefix shell, this is probably" > /dev/stderr
-        echo "because you didn't emerge the shell ${SHELL##*/}" > /dev/stderr
+        echo "Failed to find the Prefix shell, this is probably" >&2
+        echo "because you didn't emerge the shell ${SHELL##*/}" >&2
         exit -1
 fi
 
-echo "Entering Gentoo Prefix ${EPREFIX}" > /dev/stderr
+echo "Entering Gentoo Prefix ${EPREFIX}" >&2
 
-ARGS=
-for ARG in "$@"; do
-    ARGS=$"$ARGS \"$ARG\""
-done
+ARGS=$(printf ' "%s"' "$@")
 
 clean_env "$SHELL" -l -c "$ARGS"
 RET=$?
-echo "Leaving Gentoo Prefix with exit status $RET" > /dev/stderr
+echo "Leaving Gentoo Prefix with exit status $RET" >&2
 exit $RET
