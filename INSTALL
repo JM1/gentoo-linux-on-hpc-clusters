@@ -107,6 +107,9 @@ mkdir -p $GENTOO_PREFIX/usr/local/portage/
 #
 # TODO: Edit and publish those guides!
 
+# TODO: Move patch calls to a dedicated script in $GENTOO_PREFIX/etc/portage/repo.postsync.d/
+#       Ref.: https://wiki.gentoo.org/wiki/Project:Portage/Sync
+
 (cd "$GENTOO_PREFIX/usr/portage/" && \
  cat "$GENTOO_PREFIX/usr/local/src/sys-apps_iproute2_iproute2-"*.patch | patch -p1 && \
  cd sys-apps/iproute2 && \
@@ -164,6 +167,7 @@ REPONAME=wana
 ln -s /etc/profile.d/modules.sh $GENTOO_PREFIX/etc/profile.d/modules.sh
 ln -s /usr/share/bash-completion/completions/yum $GENTOO_PREFIX/usr/share/bash-completion/completions/yum
 
+eselect repository enable gentoo # clone gentoo repository via git for easier patches and pull-requests to upstream
 eselect repository enable raiagent
 eselect repository enable mva # Ref.: https://github.com/msva/mva-overlay/
 emaint sync -a
