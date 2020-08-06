@@ -70,6 +70,9 @@ software stack is best to be avoided due to the amount of work involved. What to
 
 **NOTE:** If it is possible to use containers or virtual machines, then deeply think before deciding on Gentoo Prefix!
 
+**NOTE:** Before installing Gentoo Linux, you might consider using the [Spack package
+manager](#alternative-spack-package-manager)!
+
 > To bring out the virtues of Gentoo Linux on different operating systems, the Gentoo Prefix project develops and
 > maintains a way of installing Gentoo systems in a non-standard location, designated by a "prefix".
 >
@@ -155,13 +158,25 @@ Cons:
 - not all official Gentoo packages are compatible to Gentoo Prefix and require patches
 - using software from outside the Gentoo Prefix installation, e.g. from the host OS, is difficult
 
-## Step-by-step guide
+### Step-by-step guide
 
 File [`INSTALL`](https://github.com/JM1/gentoo-linux-on-hpc-clusters/blob/master/INSTALL) describes how to setup Gentoo
 Prefix at an HPC cluster properly, using the example of our university's cluster [`wr0.wr.inf.h-brs.de`](
 https://wr0.wr.inf.h-brs.de/). [`USAGE`](https://github.com/JM1/gentoo-linux-on-hpc-clusters/blob/master/USAGE) shows
 how to interact with Gentoo Linux while being logged into the HPC cluster, how to run applications from within the
 Gentoo Prefix environment and how to schedule jobs with the host OS scheduler.
+
+## Alternative: Spack Package Manager
+
+From the [Spack package manager](https://spack.readthedocs.io) docs:
+
+> Spack is a package management tool designed to support multiple versions and configurations of software on a wide
+> variety of platforms and environments. It was designed for large supercomputing centers, where many users and
+> application teams share common installations of software on clusters with exotic architectures, using libraries that
+> do not have a standard ABI.
+
+Check out its [package list](https://spack.readthedocs.io/en/latest/package_list.html) to find out if it builds all
+your required packages.
 
 ## License
 
