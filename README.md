@@ -1,6 +1,6 @@
 [//]: # ( vim:set syntax=markdown fileformat=unix shiftwidth=4 softtabstop=4 expandtab textwidth=120: )
 [//]: # ( kate: syntax markdown; end-of-line unix; space-indent on; indent-width 4; word-wrap-column 120; )
-[//]: # ( kate: word-wrap on; remove-trailing-space on; )
+[//]: # ( kate: word-wrap on; remove-trailing-spaces modified; )
 
 # Deploying large software stacks on HPC clusters using Gentoo Prefix
 

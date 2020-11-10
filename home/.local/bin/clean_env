@@ -2,7 +2,7 @@
 #
 # vim:set syntax=sh fileformat=unix shiftwidth=4 softtabstop=4 expandtab textwidth=120:
 # kate: syntax bash; end-of-line unix; space-indent on; indent-width 4; word-wrap-column 120; word-wrap on;
-# kate: remove-trailing-space on;
+# kate: remove-trailing-spaces modified;
 #
 # Copyright (c) 2019-2020 Jakob Meng, <jakobmeng@web.de>
 
