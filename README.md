@@ -71,7 +71,7 @@ software stack is best to be avoided due to the amount of work involved. What to
 **NOTE:** If it is possible to use containers or virtual machines, then deeply think before deciding on Gentoo Prefix!
 
 **NOTE:** Before installing Gentoo Linux, you might consider using the [Spack package
-manager](#alternative-spack-package-manager)!
+manager](#alternative-spack-package-manager) or [EasyBuild](#alternative-easybuild)!
 
 > To bring out the virtues of Gentoo Linux on different operating systems, the Gentoo Prefix project develops and
 > maintains a way of installing Gentoo systems in a non-standard location, designated by a "prefix".
@@ -177,6 +177,16 @@ From the [Spack package manager](https://spack.readthedocs.io) docs:
 
 Check out its [package list](https://spack.readthedocs.io/en/latest/package_list.html) to find out if it builds all
 your required packages.
+
+## Alternative: EasyBuild
+
+From the [EasyBuild documentation](https://easybuild.readthedocs.io) docs:
+
+> EasyBuild is a software build and installation framework that allows you to manage (scientific) software on High
+> Performance Computing (HPC) systems in an efficient way.
+
+Check out its [package list](https://easybuild.readthedocs.io/en/latest/version-specific/Supported_software.html) to
+find out if it builds all your required packages.
 
 ## License
 
