@@ -80,32 +80,14 @@ bash # or logout and login again to apply changes
 # TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 # Setup a Gentoo system using Gentoo Prefix
+# Ref.: https://github.com/JM1/shelp
 #
-# Follow guides:
-#  - 'Gentoo - Grundinstallation.txt'
-#    + 'Setup a Gentoo system using Gentoo Prefix'
-#      * 'Useful software'
-#      * 'Configure locales'
-#      * 'Configuration file updates'
-#      * 'Read news'
-#      * 'CMake'
-#  - 'Gentoo - Paketverwaltung.txt'
-#    + 'eselect/repository'
-#
-# TODO: Edit and publish those guides!
+# Follow shelp/gentoo_prefix.sh to setup a Gentoo system using Gentoo Prefix
+# Follow shelp/gentoo_portage_repository.sh to set up eselect/repository and a custom repository
 
 mkdir -p $HOME/.local/bin
 mkdir -p $GENTOO_PREFIX/usr/local/portage/
 # Execute ./upload.sh on your host
-
-# Setup a custom repository
-#
-# Follow guides:
-#  - 'Gentoo - Entwicklung Paketentwicklung Programmierung Skripte.txt'
-#    + 'portage package development'
-#      * 'Custom repository'
-#
-# TODO: Edit and publish those guides!
 
 # TODO: Move patch calls to a dedicated script in $GENTOO_PREFIX/etc/portage/repo.postsync.d/
 #       Ref.: https://wiki.gentoo.org/wiki/Project:Portage/Sync
@@ -579,10 +561,8 @@ cd "$TAUHOME" && \
 ####################
 # hbrs-cmake, hbrs-mpl, hbrs-theta_utils
 
-# Follow guides:
-#  - 'Gentoo - Paketverwaltung.txt'
-#    + 'BLAS/LAPACK runtime switch'
-#    + 'Gentoo Science Overlay'
+# Follow shelp/gentoo_blas_lapack_switch.sh to set up BLAS/LAPACK runtime switch
+# Follow shelp/gentoo_science_overlay.sh to set up Gentoo Science Overlay
 
 (cd "$GENTOO_PREFIX/var/db/repos/science/" && \
  cat "$GENTOO_PREFIX/usr/local/src/sci-libs_scalapack_scalapack-2.0.2-r1.ebuild.patch" | patch -p1 && \
