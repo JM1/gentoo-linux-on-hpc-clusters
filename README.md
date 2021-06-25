@@ -192,7 +192,7 @@ find out if it builds all your required packages.
 
 GNU General Public License v3.0 or later
 
-See [LICENCE.md](https://github.com/JM1/gentoo-linux-on-hpc-clusters/blob/master/LICENSE.md) to see the full text.
+See [LICENSE.md](https://github.com/JM1/gentoo-linux-on-hpc-clusters/blob/master/LICENSE.md) to see the full text.
 
 ## Author
 
